@@ -4,6 +4,7 @@ from itertools import product
 
 # from sqlite3 import Error
 from time import sleep
+from typing import List, Set
 
 import praw
 
@@ -85,17 +86,15 @@ class Bot:
             japanese_name_lower_case = japanese_name.lower()
             comment_body_lower_case = comment.body.lower()
             technique_id = self.data[japanese_name]["id"]
-            list_of_combinations = self._space_removal_variation(
+            set_of_combinations = self._permutation_of_space_separated_words(
                 japanese_name_lower_case
             )
 
             in_comments = False
-            for combination in list_of_combinations:
-                if (
-                    combination.lower() in comment_body_lower_case
-                ):  # TODO: replace with regex
+            for phrase in set_of_combinations:
+                if phrase in comment_body_lower_case:  # TODO: replace with regex
                     in_comments = True
-                for x in self._hythen_variation(combination):
+                for x in self._hythen_variation(phrase):
                     if x in comment_body_lower_case:  # TODO: replace with regex
                         in_comments = True
             if in_comments == True:
@@ -272,37 +271,34 @@ class Bot:
 
         return rows
 
-    def _space_removal_variation(self, phrase):
-        # space removal variation and removes duplicates
-        listOfVariations = [phrase]
-        listOfVariations += self._permutation_of_single_combination(phrase)
-        listOfVariations = list(dict.fromkeys(listOfVariations))
-        return listOfVariations
+    def _permutation_of_space_separated_words(self, phrase: str) -> Set[str]:
+        """
+        Set of permutations of all the possible permutations of space removal
+        e.g. O uchi gari -> Ouchigari, O uchigari, Ouchi gari
+        Works recursively
+        """
+        list_of_words = phrase.split(" ")
+        if len(list_of_words) == 1:
+            return list_of_words
 
-    def _permutation_of_single_combination(self, phrase):
-        # permutation of all the possible permutations of space removal
-        listOfParts = phrase.split(" ")
-        numberOfParts = len(listOfParts)
-        listOfPermutations = []
-        if numberOfParts == 1:
-            return []
-        else:
-            for x in range(0, numberOfParts - 1):
-                permutationPhrase = ""
-                for y in range(0, x):
-                    permutationPhrase += listOfParts[y] + " "
+        set_of_phrases = set()
 
-                permutationPhrase += listOfParts[x] + listOfParts[x + 1] + " "
+        for index, word in enumerate(list_of_words):
+            if index is not len(list_of_words) - 1:
+                new_phrase = (
+                    " ".join(list_of_words[:index])
+                    + " "
+                    + word
+                    + list_of_words[index + 1]
+                    + " "
+                    + " ".join(list_of_words[index + 2 :])
+                ).strip()
+                set_of_phrases.update(
+                    self._permutation_of_space_separated_words(new_phrase)
+                )
 
-                for y in range(x + 2, numberOfParts):
-                    permutationPhrase += listOfParts[y] + " "
-
-                permutationPhrase = permutationPhrase.strip()
-                listOfPermutations += [
-                    permutationPhrase
-                ] + self._permutation_of_single_combination(permutationPhrase)
-
-        return listOfPermutations
+        set_of_phrases.update([phrase])
+        return set_of_phrases
 
     def _hythen_variation(self, phrase):
         # returns list of all permutations of when a ' ' is replaced by a '-'
