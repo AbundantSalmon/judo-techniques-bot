@@ -78,12 +78,12 @@ class Bot:
         returns with a list of the ids of any found judo techniques.
         Empty list is no judo techniques found.
         """
-        technique_ids: list[MentionedTechnique] = []
+        mentioned_techniques: list[MentionedTechnique] = []
 
         original_author = comment.author.name
         if original_author == REDDIT_USERNAME:
             # Do not process if the bot has read it's own comment
-            return technique_ids
+            return mentioned_techniques
         for japanese_name in self.data.keys():
             japanese_name_lower_case = japanese_name.lower()
             comment_body_lower_case = comment.body.lower()
@@ -105,10 +105,10 @@ class Bot:
                     ):  # TODO: replace with regex
                         in_comments = True
             if in_comments == True:
-                technique_ids.append(
+                mentioned_techniques.append(
                     MentionedTechnique(technique_id, japanese_name, comment.permalink)
                 )
-        return technique_ids
+        return mentioned_techniques
 
     def _set_no_post_duplicates(self, mentioned_techniques):
         """
