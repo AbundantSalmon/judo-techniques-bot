@@ -6,6 +6,7 @@ from db import recreate_database, session_scope
 # from events.models import DetectedJudoTechniqueMentionEvent
 from load_data import retrive_fixture_data
 from models import Technique
+from utils import pickle_dictionary
 
 
 def main():
@@ -17,9 +18,10 @@ def main():
     # recreate_database()
 
     techniques_data = Technique.get_cached_techniques()
+    # for generating test fixture data
+    # pickle_dictionary(techniques_data, "techniques_test_data")
     bot = Bot(techniques_data)
     bot.run()
-
 
     close_all_sessions()
 
