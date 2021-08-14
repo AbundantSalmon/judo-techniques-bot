@@ -88,7 +88,7 @@ class Bot:
             japanese_name_lower_case = japanese_name.lower()
             comment_body_lower_case = comment.body.lower()
             technique_id = self.data[japanese_name]["id"]
-            set_of_combinations = self._permutation_of_space_separated_words(
+            set_of_combinations = self._generate_permutations_of_space_separated_words(
                 japanese_name_lower_case
             )
 
@@ -278,7 +278,7 @@ class Bot:
 
         return rows
 
-    def _permutation_of_space_separated_words(self, phrase: str) -> Set[str]:
+    def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
         """
         Set of permutations of all the possible permutations of space removal
         e.g. O uchi gari -> Ouchigari, O uchigari, Ouchi gari
@@ -301,7 +301,7 @@ class Bot:
                     + " ".join(list_of_words[index + 2 :])
                 ).strip()
                 set_of_phrases.update(
-                    self._permutation_of_space_separated_words(new_phrase)
+                    self._generate_permutations_of_space_separated_words(new_phrase)
                 )
 
         set_of_phrases.update([phrase])

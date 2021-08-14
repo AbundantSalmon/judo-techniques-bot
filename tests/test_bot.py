@@ -18,7 +18,7 @@ class UnitTestBot(unittest.TestCase):
             "A-B-C D",
             "A B C-D",
         }
-        result = self.bot._hyphen_variation("A B C D")
+        result = self.bot._generate_permutations_of_hyphen_variation("A B C D")
         self.assertCountEqual(result, expected)
 
     def test_permutation_of_space_separated_words(self):
@@ -32,7 +32,7 @@ class UnitTestBot(unittest.TestCase):
             "A B C D",
             "AB CD",
         }
-        result = self.bot._permutation_of_space_separated_words("A B C D")
+        result = self.bot._generate_permutations_of_space_separated_words("A B C D")
         self.assertCountEqual(result, expected)
 
 
