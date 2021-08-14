@@ -78,7 +78,7 @@ class Bot:
         returns with a list of the ids of any found judo techniques.
         Empty list is no judo techniques found.
         """
-        technique_ids = []
+        technique_ids: list[MentionedTechnique] = []
 
         original_author = comment.author.name
         if original_author == REDDIT_USERNAME:
@@ -93,11 +93,16 @@ class Bot:
             )
 
             in_comments = False
+            # TODO: Would it be better to generate and hold list of all combinations in memory?
             for phrase in set_of_combinations:
                 if phrase in comment_body_lower_case:  # TODO: replace with regex
                     in_comments = True
-                for x in self._hythen_variation(phrase):
-                    if x in comment_body_lower_case:  # TODO: replace with regex
+                for (
+                    hyphenated_phrase
+                ) in self._generate_permutations_of_hyphen_variation(phrase):
+                    if (
+                        hyphenated_phrase in comment_body_lower_case
+                    ):  # TODO: replace with regex
                         in_comments = True
             if in_comments == True:
                 technique_ids.append(
@@ -302,20 +307,24 @@ class Bot:
         set_of_phrases.update([phrase])
         return set_of_phrases
 
-    def _hythen_variation(self, phrase):
-        # returns list of all permutations of when a ' ' is replaced by a '-'
-        numberOfSpaces = phrase.count(" ")
-        indexOfAllSpaces = list(self._find_all(phrase, " "))
-        listOfHythenVariations = []
-        for x in product(range(2), repeat=numberOfSpaces):
-            tempPhrase = phrase
-            for count, y in enumerate(x, 0):
-                if y == 1:
-                    l = list(tempPhrase)
-                    l[indexOfAllSpaces[count]] = "-"
-                    tempPhrase = "".join(l)
-            listOfHythenVariations.append(tempPhrase)
-        return listOfHythenVariations
+    def _generate_permutations_of_hyphen_variation(self, phrase: str) -> Set[str]:
+        """
+        Returns a set of all permutations of when a ' ' is replaced by a '-'
+        e.g. O uchi gari -> O-uchi gari, O uchi-gari O-uchi-gari
+        A B C D -> A-B C D, A B-C D, A B C-D, A-B-C D, A-B C-D, A B-C-D, A-B-C-D
+        """
+        number_of_spaces = phrase.count(" ")
+        index_of_all_spaces = list(self._find_all(phrase, " "))
+        set_of_all_hyphen_variations = set()
+        for x in product(range(2), repeat=number_of_spaces):
+            hyphenated_phrase = phrase
+            for count, change_to_hyphen in enumerate(x):
+                if change_to_hyphen == 1:
+                    list_of_characters = list(hyphenated_phrase)
+                    list_of_characters[index_of_all_spaces[count]] = "-"
+                    hyphenated_phrase = "".join(list_of_characters)
+            set_of_all_hyphen_variations.add(hyphenated_phrase)
+        return set_of_all_hyphen_variations
 
     def _find_all(self, a_str, sub):
         # returns a list of indices to all the start index of a substring in the string
