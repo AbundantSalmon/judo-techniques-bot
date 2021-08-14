@@ -70,7 +70,9 @@ class Bot:
         print("Initialisation Done")
         return reddit.subreddit(SUBREDDITS).stream
 
-    def _get_mentioned_techniques_from_comment(self, comment):
+    def _get_mentioned_techniques_from_comment(
+        self, comment
+    ) -> List[MentionedTechnique]:
         """
         Determines whether the supplied comment has a judo technique,
         returns with a list of the ids of any found judo techniques.
@@ -324,3 +326,9 @@ class Bot:
                 return
             yield start
             start += len(sub)  # use start += 1 to find overlapping matches
+
+
+if __name__ == "__main__":
+    test_bot = Bot(None)
+    test = test_bot._permutation("A B C D E F")
+    print(test)
