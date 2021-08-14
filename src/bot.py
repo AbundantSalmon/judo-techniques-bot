@@ -8,7 +8,7 @@ from typing import List, Set
 
 import praw
 
-from config import (
+from .config import (
     CLIENT_ID,
     CLIENT_SECRET,
     REDDIT_PASSWORD,
@@ -326,9 +326,3 @@ class Bot:
                 return
             yield start
             start += len(sub)  # use start += 1 to find overlapping matches
-
-
-if __name__ == "__main__":
-    test_bot = Bot(None)
-    test = test_bot._permutation("A B C D E F")
-    print(test)
