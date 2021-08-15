@@ -138,4 +138,4 @@ dmypy.json
 cython_debug/
 
 # Project gitignore
-src/config.py
+judo_techniques_bot/config.py
