@@ -1,7 +1,7 @@
 import pickle
 import unittest
 
-from src.bot import Bot
+from judo_techniques_bot.bot import Bot
 
 
 class Author:

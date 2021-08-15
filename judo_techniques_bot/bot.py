@@ -8,7 +8,7 @@ from typing import List, Set
 
 import praw
 
-from .config import (
+from config import (
     CLIENT_ID,
     CLIENT_SECRET,
     REDDIT_PASSWORD,
