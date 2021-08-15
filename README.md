@@ -5,9 +5,21 @@
 - Python
 - Postgresql
 - SQLAlchemy
-    - Alembic
+  - Alembic
 
 # Development FAQ
+
+## Run
+
+```bash
+python3 -m judo_techniques_bot
+```
+
+## Tests
+
+```bash
+python3 -m unittest
+```
 
 ## Database
 
