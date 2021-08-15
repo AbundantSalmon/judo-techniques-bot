@@ -4,6 +4,18 @@ import unittest
 from src.bot import Bot
 
 
+class Author:
+    def __init__(self, name="test"):
+        self.name = name
+
+
+class FakeComment:  # TODO: Make a fake comment factory
+    def __init__(self, body, author_name="test"):
+        self.author = Author(author_name)
+        self.body = body
+        self.permalink = "http://google.com"
+
+
 class UnitTestBot(unittest.TestCase):
     def setUp(self):
         # Load test data (deserialize)
@@ -40,16 +52,6 @@ class UnitTestBot(unittest.TestCase):
         self.assertCountEqual(result, expected)
 
     def test_get_mentioned_techniques_from_comment(self):
-        class Author:
-            def __init__(self, name="test"):
-                self.name = name
-
-        class FakeComment:  # TODO: Make a fake comment factory
-            def __init__(self, body, author_name="test"):
-                self.author = Author(author_name)
-                self.body = body
-                self.permalink = "http://google.com"
-
         comment = FakeComment(
             "I Uchi Mata that guy last week, but that was only after he Seoi Nage'd me"
         )
@@ -59,6 +61,15 @@ class UnitTestBot(unittest.TestCase):
         self.assertEqual(len(techniques), 2)
         self.assertEqual(techniques[0].technique, "Seoi Nage")
         self.assertEqual(techniques[1].technique, "Uchi Mata")
+
+    def test_get_no_mentioned_techniques_from_comment(self):
+        comment = FakeComment(
+            "I punched that guy last week, but that was only after he kicked me"
+        )
+
+        techniques = self.bot._get_mentioned_techniques_from_comment(comment)
+
+        self.assertEqual(len(techniques), 0)
 
 
 if __name__ == "__main__":
