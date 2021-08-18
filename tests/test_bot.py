@@ -23,20 +23,6 @@ class UnitTestBot(unittest.TestCase):
             techniques_data = pickle.load(handle)
         self.bot = Bot(techniques_data)
 
-    def test_hyphen_variation(self):
-        expected = {
-            "A-B-C-D",
-            "A B-C-D",
-            "A-B C-D",
-            "A B C D",
-            "A-B C D",
-            "A B-C D",
-            "A-B-C D",
-            "A B C-D",
-        }
-        result = self.bot._generate_permutations_of_hyphen_variation("A B C D")
-        self.assertCountEqual(result, expected)
-
     def test_permutation_of_space_separated_words(self):
         expected = {
             "A BC D",
