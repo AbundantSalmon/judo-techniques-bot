@@ -323,6 +323,7 @@ class Bot:
                     list_of_characters[index_of_all_spaces[count]] = "-"
                     hyphenated_phrase = "".join(list_of_characters)
             set_of_all_hyphen_variations.add(hyphenated_phrase)
+        set_of_all_hyphen_variations.discard(phrase)  # remove original phrase
         return set_of_all_hyphen_variations
 
     def _find_all(self, string, substring):

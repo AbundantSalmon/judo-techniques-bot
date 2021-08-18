@@ -39,7 +39,6 @@ class UnitTestBot(unittest.TestCase):
 
     def test_generate_permutations_of_hyphen_variation(self):
         expected = {
-            "A B C D",
             "A-B C D",
             "A B-C D",
             "A B C-D",
