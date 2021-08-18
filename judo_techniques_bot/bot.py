@@ -7,7 +7,6 @@ from time import sleep
 from typing import List, Set
 
 import praw
-
 from config import (
     CLIENT_ID,
     CLIENT_SECRET,
@@ -326,12 +325,16 @@ class Bot:
             set_of_all_hyphen_variations.add(hyphenated_phrase)
         return set_of_all_hyphen_variations
 
-    def _find_all(self, a_str, sub):
-        # returns a list of indices to all the start index of a substring in the string
-        start = 0
+    def _find_all(self, string, substring):
+        """
+        Generator of indices to all the starting index of a substring in the string
+        """
+        start_index = 0
         while True:
-            start = a_str.find(sub, start)
-            if start == -1:
+            start_index = string.find(substring, start_index)
+            if start_index == -1:
                 return
-            yield start
-            start += len(sub)  # use start += 1 to find overlapping matches
+            yield start_index
+            start_index += len(
+                substring
+            )  # can use start += 1 to find overlapping matches
