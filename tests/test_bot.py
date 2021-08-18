@@ -65,6 +65,15 @@ class UnitTestBot(unittest.TestCase):
         result = self.bot._generate_permutations_of_hyphen_variation("A B C D")
         self.assertCountEqual(result, expected)
 
+    def test_find_all(self):
+        expected = [0, 15, 31]
+        result = list(
+            self.bot._find_all(
+                "hello my baby, hello my honey, hello my old time gal", "hello"
+            )
+        )
+        self.assertCountEqual(result, expected)
+
     def test_get_mentioned_techniques_from_comment(self):
         comment = FakeComment(
             "I Uchi Mata that guy last week, but that was only after he seoi Nage'd me"
