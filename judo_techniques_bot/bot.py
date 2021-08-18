@@ -126,10 +126,16 @@ class Bot:
                             )
         return mentioned_techniques
 
-    def _set_no_post_duplicates(self, mentioned_techniques):
+    def _set_no_post_duplicates(self, mentioned_techniques: List[MentionedTechnique]):
         """
-        TODO: Set flag `will_be_posted` for all duplicated techniques to False
+        Set flag `will_be_posted` for all duplicated techniques to False
         """
+        techniques = []
+        for mentioned_technique in mentioned_techniques:
+            if mentioned_technique.technique not in techniques:
+                techniques.append(mentioned_technique.technique)
+            else:
+                mentioned_technique.will_be_posted = False
         return mentioned_techniques
 
     def _set_no_post_previously_translated():

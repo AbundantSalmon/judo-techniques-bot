@@ -1,7 +1,7 @@
 import pickle
 import unittest
 
-from judo_techniques_bot.bot import Bot
+from judo_techniques_bot.bot import Bot, MentionedTechnique
 
 
 class Author:
@@ -84,6 +84,21 @@ class UnitTestBot(unittest.TestCase):
         self.assertEqual(techniques[1].technique, "Seoi Nage")
         self.assertEqual(techniques[1].technique_name_variant, "seoi-nage")
         self.assertEqual(techniques[2].technique, "Uchi Mata")
+
+    def test_set_no_post_duplicates(self):
+        test_values = [
+            MentionedTechnique("1", "throw", "url"),
+            MentionedTechnique("2", "throw_2", "url"),
+            MentionedTechnique("1", "throw", "url"),
+            MentionedTechnique("1", "throw", "url"),
+        ]
+
+        techniques = self.bot._set_no_post_duplicates(test_values)
+
+        self.assertEqual(techniques[0].will_be_posted, True)
+        self.assertEqual(techniques[1].will_be_posted, True)
+        self.assertEqual(techniques[2].will_be_posted, False)
+        self.assertEqual(techniques[3].will_be_posted, False)
 
     def test_get_no_mentioned_techniques_from_comment(self):
         comment = FakeComment(
