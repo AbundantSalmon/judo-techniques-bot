@@ -70,6 +70,19 @@ class UnitTestBot(unittest.TestCase):
         self.assertEqual(techniques[0].technique, "Seoi Nage")
         self.assertEqual(techniques[1].technique, "Uchi Mata")
 
+    def test_get_mentioned_techniques_from_comment_repeated(self):
+        comment = FakeComment(
+            "I Uchi Mata that guy last week, but that was only after he seoi "
+            "Nage'd me. I will seoi nage him next time."
+        )
+
+        techniques = self.bot._get_mentioned_techniques_from_comment(comment)
+
+        self.assertEqual(len(techniques), 3)
+        self.assertEqual(techniques[0].technique, "Seoi Nage")
+        self.assertEqual(techniques[1].technique, "Seoi Nage")
+        self.assertEqual(techniques[2].technique, "Uchi Mata")
+
     def test_get_no_mentioned_techniques_from_comment(self):
         comment = FakeComment(
             "I punched that guy last week, but that was only after he kicked me"

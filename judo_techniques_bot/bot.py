@@ -91,22 +91,31 @@ class Bot:
                 japanese_name_lower_case
             )
 
-            in_comments = False
             # TODO: Would it be better to generate and hold list of all combinations in memory?
             for phrase in set_of_combinations:
-                if phrase in comment_body_lower_case:  # TODO: replace with regex
-                    in_comments = True
+                indices_of_mentions = list(
+                    self._find_all(comment_body_lower_case, phrase)
+                )
+                if len(indices_of_mentions) > 0:  # TODO: replace with regex
+                    for x in indices_of_mentions:
+                        mentioned_techniques.append(
+                            MentionedTechnique(
+                                technique_id, japanese_name, comment.permalink
+                            )
+                        )
                 for (
                     hyphenated_phrase
                 ) in self._generate_permutations_of_hyphen_variation(phrase):
-                    if (
-                        hyphenated_phrase in comment_body_lower_case
-                    ):  # TODO: replace with regex
-                        in_comments = True
-            if in_comments == True:
-                mentioned_techniques.append(
-                    MentionedTechnique(technique_id, japanese_name, comment.permalink)
-                )
+                    indices_of_hyphen_mentions = list(
+                        self._find_all(comment_body_lower_case, hyphenated_phrase)
+                    )
+                    if len(indices_of_hyphen_mentions) > 0:  # TODO: replace with regex
+                        for x in indices_of_hyphen_mentions:
+                            mentioned_techniques.append(
+                                MentionedTechnique(
+                                    technique_id, japanese_name, comment.permalink
+                                )
+                            )
         return mentioned_techniques
 
     def _set_no_post_duplicates(self, mentioned_techniques):
