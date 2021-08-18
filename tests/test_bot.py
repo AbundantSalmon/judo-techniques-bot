@@ -51,9 +51,23 @@ class UnitTestBot(unittest.TestCase):
         result = self.bot._generate_permutations_of_space_separated_words("A B C D")
         self.assertCountEqual(result, expected)
 
+    def test_generate_permutations_of_hyphen_variation(self):
+        expected = {
+            "A B C D",
+            "A-B C D",
+            "A B-C D",
+            "A B C-D",
+            "A-B-C D",
+            "A-B C-D",
+            "A B-C-D",
+            "A-B-C-D",
+        }
+        result = self.bot._generate_permutations_of_hyphen_variation("A B C D")
+        self.assertCountEqual(result, expected)
+
     def test_get_mentioned_techniques_from_comment(self):
         comment = FakeComment(
-            "I Uchi Mata that guy last week, but that was only after he Seoi Nage'd me"
+            "I Uchi Mata that guy last week, but that was only after he seoi Nage'd me"
         )
 
         techniques = self.bot._get_mentioned_techniques_from_comment(comment)
