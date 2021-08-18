@@ -23,9 +23,14 @@ class MentionedTechnique:
     Data class struct
     """
 
-    def __init__(self, technique_id, technique, comment_url):
+    def __init__(
+        self, technique_id, technique, comment_url, technique_name_variant=None
+    ):
         self.technique = technique
         self.technique_id = technique_id
+        self.technique_name_variant = (
+            technique if technique_name_variant is None else technique_name_variant
+        )
         self.comment_url = comment_url
         self.will_be_posted = True
 
@@ -100,7 +105,7 @@ class Bot:
                     for x in indices_of_mentions:
                         mentioned_techniques.append(
                             MentionedTechnique(
-                                technique_id, japanese_name, comment.permalink
+                                technique_id, japanese_name, comment.permalink, phrase
                             )
                         )
                 for (
@@ -113,7 +118,10 @@ class Bot:
                         for x in indices_of_hyphen_mentions:
                             mentioned_techniques.append(
                                 MentionedTechnique(
-                                    technique_id, japanese_name, comment.permalink
+                                    technique_id,
+                                    japanese_name,
+                                    comment.permalink,
+                                    hyphenated_phrase,
                                 )
                             )
         return mentioned_techniques
