@@ -53,9 +53,9 @@ class Bot:
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
             mentioned_techniques = self._set_no_post_duplicates(mentioned_techniques)
-            # mentioned_techniques = self.set_no_post_previously_translated(
-            #     mentioned_techniques
-            # )
+            mentioned_techniques = self._set_no_post_previously_translated(
+                mentioned_techniques
+            )
             self.save_records(mentioned_techniques)
 
             if len(mentioned_techniques) != 0:
@@ -152,47 +152,25 @@ class Bot:
                 mentioned_technique.will_be_posted = False
         return mentioned_techniques
 
-    def _set_no_post_previously_translated():
+    def _set_no_post_previously_translated(
+        mentioned_techniques: List[MentionedTechnique],
+    ):
         """
-        TODO: This function will check to see whether the techniques have been
-        previously translated
+        This function will check to see whether the techniques have been
+        previously translated and prevent further translations
         """
-
-        # Remove techniques if judo techniques bot has already previously posted the meaning of the same techniques
-        techniques_ids_unique = []
-        for technique in technique_ids:
-
-            conn = sqlite3.connect(DATABASE)
-            cur = conn.cursor()
-            cur.execute(
-                "UPDATE id SET mentionsNo = mentionsNo + 1 WHERE techniqueID=?",
-                (technique,),
-            )
-            cur.execute(
-                "INSERT INTO datalog (datetime,judotech,author,entrytype) VALUES(?,?,?,?)",
-                (
-                    datetime.now(timezone.utc),
-                    technique,
-                    original_author,
-                    "mentionedincomments",
-                ),
-            )
-            conn.commit()
-            conn.close()
-
-            in_comments = False
-            parent_submission = comment.submission.comments
-            parent_submission.replace_more(limit=None)
-            for comment in parent_submission.list():
-                if comment.author == None:
-                    continue
-                if comment.author.name == REDDIT_USERNAME:
-                    japaneseName = self.select_japanesename(technique)[0][2]
-                    if japaneseName in comment.body:
-                        in_comments = True
-            if in_comments == False:
-                techniques_ids_unique.append(technique)
-        return techniques_ids_unique
+        for mentioned_technique in mentioned_techniques:
+            if mentioned_technique.will_be_posted is not False:
+                parent_submission = comment.submission.comments
+                parent_submission.replace_more(limit=None)
+                for comment in parent_submission.list():
+                    if (
+                        comment.author is not None
+                        and comment.author.name == REDDIT_USERNAME
+                        and mentioned_technique.technique in comment.body
+                    ):
+                        mentioned_technique.will_be_posted = False
+        return mentioned_techniques
 
     def save_records(self, mentioned_techniques: List[MentionedTechnique]):
         with session_scope() as s:
