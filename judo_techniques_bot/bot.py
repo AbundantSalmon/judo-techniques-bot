@@ -92,7 +92,9 @@ class Bot:
                 self._reply_to_comment(comment, techniques_to_translate)
             else:
                 # do nothing
-                print("No judo techniques in comment\n_____________________")
+                print(
+                    "No judo techniques translated from the comment\n_____________________"
+                )
 
     def _initialize(self):
         print("Initializing")
