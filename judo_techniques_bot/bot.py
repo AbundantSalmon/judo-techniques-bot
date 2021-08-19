@@ -136,8 +136,8 @@ class Bot:
                             MentionedTechnique(
                                 technique_id,
                                 japanese_name,
-                                self.data[japanese_name].english_names,
-                                self.data[japanese_name].video_url,
+                                self.data[japanese_name]["english_names"],
+                                self.data[japanese_name]["video_url"],
                                 comment.permalink,
                                 original_author,
                                 technique_name_variant=phrase,
@@ -155,8 +155,8 @@ class Bot:
                                 MentionedTechnique(
                                     technique_id,
                                     japanese_name,
-                                    self.data[japanese_name].english_names,
-                                    self.data[japanese_name].video_url,
+                                    self.data[japanese_name]["english_names"],
+                                    self.data[japanese_name]["video_url"],
                                     comment.permalink,
                                     original_author,
                                     technique_name_variant=hyphenated_phrase,
