@@ -1,12 +1,10 @@
 from logging.config import fileConfig
 
 from alembic import context
+from config import DATABASE_URI
+from db import Base
+from models import DetectedJudoTechniqueMentionEvent, Technique
 from sqlalchemy import engine_from_config, pool
-
-from config.config import DATABASE_URI
-from database.db import Base
-from events.models import DetectedJudoTechniqueMentionEvent
-from techniques.models import Technique
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
