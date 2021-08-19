@@ -1,11 +1,10 @@
+from db import Base, session_scope
 from sqlalchemy import Column, Identity
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.types import Boolean, DateTime, Integer, String
-
-from db import Base, session_scope
 
 
 class Technique(Base):
@@ -43,7 +42,7 @@ class Technique(Base):
                         "id": tech.id,
                         "japanese_display_name": tech.japanese_display_name,
                         "english_names": tech.english_names,
-                        "video_url": tech.video_url
+                        "video_url": tech.video_url,
                     }
 
         return dictionary_of_techniques
