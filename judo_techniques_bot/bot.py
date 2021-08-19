@@ -240,20 +240,11 @@ class Bot:
                     " " if youtube_link is None else "[here](" + youtube_link + ")"
                 )
                 tech_text = (
-                    (
-                        "|**"
-                        + japanese_name
-                        + "**: | *"
-                        + english_name
-                        + "* | "
-                        + youtube_string
-                        + "|\n"
-                    )
+                    f"|**{japanese_name}**: | *{english_name}* | {youtube_string}|\n"
                     if index == 0
-                    else "||*" + english_name + "* ||\n"
+                    else f"||*{english_name}* ||\n"
                 )
                 text += tech_text
-            print(text)
         text += (
             f"\n\nAny missed names may have already been translated in my "
             + "previous comments in the post."
