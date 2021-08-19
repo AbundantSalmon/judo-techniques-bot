@@ -56,7 +56,7 @@ class Bot:
             mentioned_techniques = self._set_no_post_previously_translated(
                 mentioned_techniques
             )
-            self.save_records(mentioned_techniques)
+            self._save_records(mentioned_techniques)
 
             if len(mentioned_techniques) != 0:
                 print(
@@ -172,7 +172,7 @@ class Bot:
                         mentioned_technique.will_be_posted = False
         return mentioned_techniques
 
-    def save_records(self, mentioned_techniques: List[MentionedTechnique]):
+    def _save_records(self, mentioned_techniques: List[MentionedTechnique]):
         """
         Save DetectedJudoTechniqueMentionEvent to the DB
         """
