@@ -53,7 +53,9 @@ class DetectedJudoTechniqueMentionEvent(Base):
     id = Column(Integer, Identity(), primary_key=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     technique_id = Column(Integer, ForeignKey("techniques.id", ondelete="CASCADE"))
+    name_variant = Column(String)
     author = Column(String)
+    comment_url = Column(String)
     translated = Column(Boolean)  # True if there was a reply with the translation
 
     # relationships
