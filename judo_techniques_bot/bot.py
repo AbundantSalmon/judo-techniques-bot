@@ -173,6 +173,9 @@ class Bot:
         return mentioned_techniques
 
     def save_records(self, mentioned_techniques: List[MentionedTechnique]):
+        """
+        Save DetectedJudoTechniqueMentionEvent to the DB
+        """
         with session_scope() as s:
             for technique in mentioned_techniques:
                 s.add(
@@ -258,52 +261,6 @@ class Bot:
 
         print("replying\n_____________________")
         return
-
-    def _select_all_japanesenamestable(self):
-        conn = sqlite3.connect(DATABASE)
-
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM japanesenamestable")
-
-        rows = cur.fetchall()
-
-        conn.close()
-
-        return rows
-
-    def _select_englishname(self, techID):
-        conn = sqlite3.connect(DATABASE)
-
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM englishnamestable WHERE techniqueID = ?", (techID,))
-
-        rows = cur.fetchall()
-
-        conn.close()
-
-        return rows
-
-    def _select_japanesename(self, techID):
-        conn = sqlite3.connect(DATABASE)
-
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM japanesenamestable WHERE techniqueID = ?", (techID,))
-        rows = cur.fetchall()
-
-        conn.close()
-
-        return rows
-
-    def _select_youtubeLink(self, techID):
-        conn = sqlite3.connect(DATABASE)
-
-        cur = conn.cursor()
-        cur.execute("SELECT youtubeLink FROM id WHERE techniqueID = ?", (techID,))
-        rows = cur.fetchall()
-
-        conn.close()
-
-        return rows
 
     def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
         """
