@@ -1,8 +1,5 @@
-import sqlite3
 from datetime import datetime, timezone
 from itertools import product
-
-# from sqlite3 import Error
 from time import sleep
 from typing import List, Set
 
