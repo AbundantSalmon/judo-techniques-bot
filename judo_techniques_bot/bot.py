@@ -57,18 +57,29 @@ class Bot:
                 mentioned_techniques
             )
             self._save_records(mentioned_techniques)
+            techniques_to_translate = self._filter_for_translations(
+                mentioned_techniques
+            )
 
-            if len(mentioned_techniques) != 0:
+            if len(techniques_to_translate) != 0:
+                print("Detected judo techniques in comment:\n\t", end="")
                 print(
                     [
                         technique.technique_name_variant
                         for technique in mentioned_techniques
                     ]
                 )
-                # self.reply_to_comment(comment, mentioned_techniques)
+                print("Providing translations for:\n\t", end="")
+                print(
+                    [
+                        technique.technique_name_variant
+                        for technique in techniques_to_translate
+                    ]
+                )
+                # self.reply_to_comment(comment, techniques_to_translate)
             else:
                 # do nothing
-                print("No Judo comment\n_____________________")
+                print("No judo techniques in comment\n_____________________")
 
     def _initialize(self):
         print("Initializing")
@@ -187,6 +198,11 @@ class Bot:
                         translated=technique.will_be_posted,
                     )
                 )
+
+    def _filter_for_translations(self, mentioned_techniques: List[MentionedTechnique]):
+        return [
+            technique for technique in mentioned_techniques if technique.will_be_posted
+        ]
 
     def _reply_to_comment(self, comment, techniqueIDs):
         # code to reply to comment here, need to figureout what argument are req
