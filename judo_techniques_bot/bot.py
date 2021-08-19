@@ -26,13 +26,22 @@ class MentionedTechnique:
     """
 
     def __init__(
-        self, technique_id, technique, comment_url, author, technique_name_variant=None
+        self,
+        technique_id,
+        technique,
+        english_names,
+        youtube_link,
+        comment_url,
+        author,
+        technique_name_variant=None,
     ):
         self.technique = technique
         self.technique_id = technique_id
         self.technique_name_variant = (
             technique if technique_name_variant is None else technique_name_variant
         )
+        self.english_names = english_names
+        (self.youtube_link,) = youtube_link
         self.comment_url = comment_url
         self.author = author
         self.will_be_posted = True
@@ -76,7 +85,7 @@ class Bot:
                         for technique in techniques_to_translate
                     ]
                 )
-                # self.reply_to_comment(comment, techniques_to_translate)
+                self._reply_to_comment(comment, techniques_to_translate)
             else:
                 # do nothing
                 print("No judo techniques in comment\n_____________________")
@@ -127,6 +136,8 @@ class Bot:
                             MentionedTechnique(
                                 technique_id,
                                 japanese_name,
+                                self.data[japanese_name].english_names,
+                                self.data[japanese_name].video_url,
                                 comment.permalink,
                                 original_author,
                                 technique_name_variant=phrase,
@@ -144,6 +155,8 @@ class Bot:
                                 MentionedTechnique(
                                     technique_id,
                                     japanese_name,
+                                    self.data[japanese_name].english_names,
+                                    self.data[japanese_name].video_url,
                                     comment.permalink,
                                     original_author,
                                     technique_name_variant=hyphenated_phrase,
@@ -204,65 +217,45 @@ class Bot:
             technique for technique in mentioned_techniques if technique.will_be_posted
         ]
 
-    def _reply_to_comment(self, comment, techniqueIDs):
+    def _reply_to_comment(
+        self, comment, techniques_to_translate: List[MentionedTechnique]
+    ):
         # code to reply to comment here, need to figureout what argument are req
-        text = "The Japanese terms mentioned in the above comment were: \n\n\n|Japanese|English|Video Link| \n|---|---|---|\n"
-        for tech in techniqueIDs:
-            englishNames = self._select_englishname(tech)
-            numberOfEnglishNames = len(englishNames)
-
-            for x in range(0, numberOfEnglishNames):
-                if x == 0:
-                    japaneseName = self._select_japanesename(tech)[0][2]
-                else:
-                    japaneseName = ""
-                englishName = self._select_englishname(tech)[x][0]
-                if x == 0:
-                    youtubeLink = self._select_youtubeLink(tech)[0][0]
-                else:
-                    youtubeLink = ""
-                if youtubeLink is None:
-                    youtubeString = " "
-                else:
-                    youtubeString = "[here](" + youtubeLink + ")"
-                if japaneseName != "":
-                    techText = (
+        text = "The Japanese terms mentioned in the above comment were: \n\n\n"
+        "|Japanese|English|Video Link| \n"
+        "|---|---|---|\n"
+        for tech in techniques_to_translate:
+            for index, english_name in enumerate(tech.english_names):
+                japanese_name = tech.technique if index == 0 else ""
+                youtube_link = tech.youtube_link if index == 0 else ""
+                youtube_string = (
+                    " " if youtube_link is None else "[here](" + youtube_link + ")"
+                )
+                tech_text = (
+                    (
                         "|**"
-                        + japaneseName
+                        + japanese_name
                         + "**: | *"
-                        + englishName
+                        + english_name
                         + "* | "
-                        + youtubeString
+                        + youtube_string
                         + "|\n"
                     )
-                else:
-                    techText = "||*" + englishName + "* ||\n"
-                text += techText
+                    if index == 0
+                    else "||*" + english_name + "* ||\n"
+                )
+                text += tech_text
             print(text)
         text += (
-            "\n\nAny missed names may have already been translated in my previous comments in the post.\n\n______________________\n\nJudo Bot "
-            + VERSION
-            + ": If you have any comments or suggestions please don't hesitate to direct message [me](https://reddit.com/message/compose/?to=JudoTechniquesBot).\n\n"
+            f"\n\nAny missed names may have already been translated in my "
+            "previous comments in the post."
+            "\n\n______________________\n\n"
+            "Judo Bot {VERSION}: If you have any comments or suggestions "
+            "please don't hesitate to direct message "
+            "[me](https://reddit.com/message/compose/?to=JudoTechniquesBot).\n\n"
         )
         try:
             comment.reply(text)
-
-            conn = sqlite3.connect(DATABASE)
-            cur = conn.cursor()
-            cur.execute(
-                "UPDATE id SET postsNo = postsNo + 1 WHERE techniqueID=?", (tech,)
-            )
-            cur.execute(
-                "INSERT INTO datalog (datetime,judotech,author,entrytype) VALUES(?,?,?,?)",
-                (
-                    datetime.now(timezone.utc),
-                    tech,
-                    comment.author.name,
-                    "judobotreply",
-                ),
-            )
-            conn.commit()
-            conn.close()
         except praw.exceptions.APIException as e:
             print(e)
             if e.error_type == "DELETED_COMMENT":
@@ -270,12 +263,14 @@ class Bot:
                     "Comment that was being replied to was found to be deleted, no reply made."
                 )
             else:
-                print("sleeping 10 min, then retry")
+                print(
+                    "sleeping 10 min, then retry"
+                )  # TODO: Think of a better way to handle
                 sleep(10 * 60)
                 # retry posting after 10 minutes
-                self._reply_to_comment(comment, techniqueIDs)
+                self._reply_to_comment(comment, techniques_to_translate)
 
-        print("replying\n_____________________")
+        print("Replied!\n_____________________")
         return
 
     def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
