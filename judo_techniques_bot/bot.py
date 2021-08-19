@@ -57,7 +57,11 @@ class Bot:
         stream = self._initialize()
 
         print("Reading comments...")
-        for comment in stream.comments(skip_existing=True):
+        for comment in (
+            comment
+            for comment in stream.comments(skip_existing=True)
+            if comment.author.name != REDDIT_USERNAME
+        ):  # Skip's bot's own comment
             print("\t" + comment.body)
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
@@ -223,9 +227,11 @@ class Bot:
         self, comment, techniques_to_translate: List[MentionedTechnique]
     ):
         # code to reply to comment here, need to figureout what argument are req
-        text = "The Japanese terms mentioned in the above comment were: \n\n\n"
-        +"|Japanese|English|Video Link| \n"
-        +"|---|---|---|\n"
+        text = (
+            "The Japanese terms mentioned in the above comment were: \n\n\n"
+            + "|Japanese|English|Video Link| \n"
+            + "|---|---|---|\n"
+        )
         for tech in techniques_to_translate:
             for index, english_name in enumerate(tech.english_names):
                 japanese_name = tech.technique if index == 0 else ""
