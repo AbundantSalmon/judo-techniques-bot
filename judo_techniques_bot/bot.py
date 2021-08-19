@@ -24,7 +24,7 @@ class MentionedTechnique:
     """
 
     def __init__(
-        self, technique_id, technique, comment_url, technique_name_variant=None
+        self, technique_id, technique, comment_url, author, technique_name_variant=None
     ):
         self.technique = technique
         self.technique_id = technique_id
@@ -32,6 +32,7 @@ class MentionedTechnique:
             technique if technique_name_variant is None else technique_name_variant
         )
         self.comment_url = comment_url
+        self.author = author
         self.will_be_posted = True
 
 
@@ -105,7 +106,11 @@ class Bot:
                     for x in indices_of_mentions:
                         mentioned_techniques.append(
                             MentionedTechnique(
-                                technique_id, japanese_name, comment.permalink, phrase
+                                technique_id,
+                                japanese_name,
+                                comment.permalink,
+                                original_author,
+                                technique_name_variant=phrase,
                             )
                         )
                 for (
@@ -121,7 +126,8 @@ class Bot:
                                     technique_id,
                                     japanese_name,
                                     comment.permalink,
-                                    hyphenated_phrase,
+                                    original_author,
+                                    technique_name_variant=hyphenated_phrase,
                                 )
                             )
         return mentioned_techniques
