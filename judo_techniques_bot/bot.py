@@ -41,7 +41,7 @@ class MentionedTechnique:
             technique if technique_name_variant is None else technique_name_variant
         )
         self.english_names = english_names
-        (self.youtube_link,) = youtube_link
+        self.youtube_link = youtube_link
         self.comment_url = comment_url
         self.author = author
         self.will_be_posted = True
@@ -63,7 +63,7 @@ class Bot:
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
             mentioned_techniques = self._set_no_post_duplicates(mentioned_techniques)
             mentioned_techniques = self._set_no_post_previously_translated(
-                mentioned_techniques
+                comment, mentioned_techniques
             )
             self._save_records(mentioned_techniques)
             techniques_to_translate = self._filter_for_translations(
@@ -177,6 +177,8 @@ class Bot:
         return mentioned_techniques
 
     def _set_no_post_previously_translated(
+        self,
+        comment,
         mentioned_techniques: List[MentionedTechnique],
     ):
         """
@@ -222,8 +224,8 @@ class Bot:
     ):
         # code to reply to comment here, need to figureout what argument are req
         text = "The Japanese terms mentioned in the above comment were: \n\n\n"
-        "|Japanese|English|Video Link| \n"
-        "|---|---|---|\n"
+        +"|Japanese|English|Video Link| \n"
+        +"|---|---|---|\n"
         for tech in techniques_to_translate:
             for index, english_name in enumerate(tech.english_names):
                 japanese_name = tech.technique if index == 0 else ""
@@ -248,11 +250,11 @@ class Bot:
             print(text)
         text += (
             f"\n\nAny missed names may have already been translated in my "
-            "previous comments in the post."
-            "\n\n______________________\n\n"
-            "Judo Bot {VERSION}: If you have any comments or suggestions "
-            "please don't hesitate to direct message "
-            "[me](https://reddit.com/message/compose/?to=JudoTechniquesBot).\n\n"
+            + "previous comments in the post."
+            + "\n\n______________________\n\n"
+            + f"Judo Bot {VERSION}: If you have any comments or suggestions "
+            + "please don't hesitate to direct message "
+            + "[me](https://reddit.com/message/compose/?to=JudoTechniquesBot).\n\n"
         )
         try:
             comment.reply(text)
@@ -264,7 +266,7 @@ class Bot:
                 )
             else:
                 print(
-                    "sleeping 10 min, then retry"
+                    "Sleeping 10 min, then retry"
                 )  # TODO: Think of a better way to handle
                 sleep(10 * 60)
                 # retry posting after 10 minutes
