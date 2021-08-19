@@ -61,7 +61,7 @@ class Bot:
             comment
             for comment in stream.comments(skip_existing=True)
             if comment.author.name != REDDIT_USERNAME
-        ):  # Skip's bot's own comment
+        ):  # Skips bot's own comment
             print("\t" + comment.body)
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
