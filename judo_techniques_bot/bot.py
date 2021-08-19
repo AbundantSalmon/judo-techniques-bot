@@ -59,7 +59,12 @@ class Bot:
             self.save_records(mentioned_techniques)
 
             if len(mentioned_techniques) != 0:
-                print(mentioned_techniques)
+                print(
+                    [
+                        technique.technique_name_variant
+                        for technique in mentioned_techniques
+                    ]
+                )
                 # self.reply_to_comment(comment, mentioned_techniques)
             else:
                 # do nothing
