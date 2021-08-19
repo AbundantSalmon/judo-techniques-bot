@@ -16,6 +16,8 @@ from config import (
     USER_AGENT,
     VERSION,
 )
+from db import session_scope
+from models import DetectedJudoTechniqueMentionEvent
 
 
 class MentionedTechnique:
@@ -54,6 +56,7 @@ class Bot:
             # mentioned_techniques = self.set_no_post_previously_translated(
             #     mentioned_techniques
             # )
+            self.save_records(mentioned_techniques)
 
             if len(mentioned_techniques) != 0:
                 print(mentioned_techniques)
@@ -185,6 +188,19 @@ class Bot:
             if in_comments == False:
                 techniques_ids_unique.append(technique)
         return techniques_ids_unique
+
+    def save_records(self, mentioned_techniques: List[MentionedTechnique]):
+        with session_scope() as s:
+            for technique in mentioned_techniques:
+                s.add(
+                    DetectedJudoTechniqueMentionEvent(
+                        technique_id=technique.technique_id,
+                        name_variant=technique.technique_name_variant,
+                        author=technique.author,
+                        comment_url=technique.comment_url,
+                        translated=technique.will_be_posted,
+                    )
+                )
 
     def _reply_to_comment(self, comment, techniqueIDs):
         # code to reply to comment here, need to figureout what argument are req
