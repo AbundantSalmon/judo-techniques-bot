@@ -1,11 +1,10 @@
-from sqlalchemy.orm.session import close_all_sessions
-
 from bot import Bot
 from db import recreate_database, session_scope
 
 # from events.models import DetectedJudoTechniqueMentionEvent
-from load_data import retrive_fixture_data
+from load_data import retrieve_fixture_data
 from models import Technique
+from sqlalchemy.orm.session import close_all_sessions
 from utils import pickle_dictionary
 
 
