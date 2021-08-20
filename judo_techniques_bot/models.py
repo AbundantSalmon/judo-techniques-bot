@@ -33,6 +33,7 @@ class Technique(Base):
             self.id, self.japanese_display_name, self.video_url
         )
 
+    @staticmethod
     def get_cached_techniques():
         dictionary_of_techniques = {}
         with session_scope() as s:
