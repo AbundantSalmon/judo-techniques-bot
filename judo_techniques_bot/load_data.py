@@ -7,7 +7,7 @@ folder = os.path.dirname(os.path.abspath(__file__))
 file_location = os.path.join(folder, TECHNIQUES_DATA_FILE)
 
 
-def retrive_fixture_data():
+def retrieve_fixture_data():
     print("Retrieving technique data from:")
     print(file_location)
 
