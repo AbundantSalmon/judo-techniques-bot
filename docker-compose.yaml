@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./logs:/app/logs
+      - .:/app/
+      # - ./logs:/app/logs
     stdin_open: true
     tty: true
