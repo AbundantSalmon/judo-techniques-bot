@@ -60,7 +60,7 @@ class Bot:
             for comment in stream.comments(skip_existing=True)
             if comment.author.name != REDDIT_USERNAME
         ):  # Skips bot's own comment
-            logging.info("Message:\n\t" + comment.body)
+            logging.info("Message:\t" + comment.body)
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
             mentioned_techniques = self._set_no_post_duplicates(mentioned_techniques)
@@ -72,7 +72,7 @@ class Bot:
                 mentioned_techniques
             )
             logging.info(
-                "Detected judo techniques in comment:\n\t",
+                "Detected judo techniques in comment:",
             )
             logging.info(
                 [technique.technique_name_variant for technique in mentioned_techniques]
@@ -80,7 +80,7 @@ class Bot:
 
             if len(techniques_to_translate) != 0:
                 logging.info(
-                    "Providing translations for:\n\t",
+                    "Providing translations for:",
                 )
                 logging.info(
                     [
