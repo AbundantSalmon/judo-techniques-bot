@@ -87,10 +87,38 @@ class UnitTestBot(unittest.TestCase):
 
     def test_set_no_post_duplicates(self):
         test_values = [
-            MentionedTechnique("1", "throw", "url"),
-            MentionedTechnique("2", "throw_2", "url"),
-            MentionedTechnique("1", "throw", "url"),
-            MentionedTechnique("1", "throw", "url"),
+            MentionedTechnique(
+                "1",
+                "throw",
+                "english_names",
+                "youtube_link",
+                "comment_url",
+                "author",
+            ),
+            MentionedTechnique(
+                "2",
+                "throw_2",
+                "english_names",
+                "youtube_link",
+                "comment_url",
+                "author",
+            ),
+            MentionedTechnique(
+                "1",
+                "throw",
+                "english_names",
+                "youtube_link",
+                "comment_url",
+                "author",
+            ),
+            MentionedTechnique(
+                "1",
+                "throw",
+                "english_names",
+                "youtube_link",
+                "comment_url",
+                "author",
+            ),
         ]
 
         techniques = self.bot._set_no_post_duplicates(test_values)
