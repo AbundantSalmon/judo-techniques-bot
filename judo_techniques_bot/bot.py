@@ -132,38 +132,34 @@ class Bot:
                 indices_of_mentions = list(
                     self._find_all(comment_body_lower_case, phrase)
                 )
-                if len(indices_of_mentions) > 0:  # TODO: replace with regex
-                    for x in indices_of_mentions:
-                        mentioned_techniques.append(
-                            MentionedTechnique(
-                                technique_id,
-                                japanese_name,
-                                self.data[japanese_name]["english_names"],
-                                self.data[japanese_name]["video_url"],
-                                comment.permalink,
-                                original_author,
-                                technique_name_variant=phrase,
-                            )
-                        )
+                for _ in indices_of_mentions:  # TODO: replace with regex
+                    technique = MentionedTechnique(
+                        technique_id,
+                        japanese_name,
+                        self.data[japanese_name]["english_names"],
+                        self.data[japanese_name]["video_url"],
+                        comment.permalink,
+                        original_author,
+                        technique_name_variant=phrase,
+                    )
+                    mentioned_techniques.append(technique)
                 for (
                     hyphenated_phrase
                 ) in self._generate_permutations_of_hyphen_variation(phrase):
                     indices_of_hyphen_mentions = list(
                         self._find_all(comment_body_lower_case, hyphenated_phrase)
                     )
-                    if len(indices_of_hyphen_mentions) > 0:  # TODO: replace with regex
-                        for x in indices_of_hyphen_mentions:
-                            mentioned_techniques.append(
-                                MentionedTechnique(
-                                    technique_id,
-                                    japanese_name,
-                                    self.data[japanese_name]["english_names"],
-                                    self.data[japanese_name]["video_url"],
-                                    comment.permalink,
-                                    original_author,
-                                    technique_name_variant=hyphenated_phrase,
-                                )
-                            )
+                    for _ in indices_of_hyphen_mentions:  # TODO: replace with regex
+                        technique = MentionedTechnique(
+                            technique_id,
+                            japanese_name,
+                            self.data[japanese_name]["english_names"],
+                            self.data[japanese_name]["video_url"],
+                            comment.permalink,
+                            original_author,
+                            technique_name_variant=hyphenated_phrase,
+                        )
+                        mentioned_techniques.append(technique)
         return mentioned_techniques
 
     def _set_no_post_duplicates(self, mentioned_techniques: List[MentionedTechnique]):
@@ -260,15 +256,13 @@ class Bot:
                     "Comment that was being replied to was found to be deleted, no reply made."
                 )
             else:
-                print(
-                    "Sleeping 10 min, then retry"
-                )  # TODO: Think of a better way to handle
+                # TODO: Think of a better way to handle
+                print("Sleeping 10 min, then retry")
                 sleep(10 * 60)
                 # retry posting after 10 minutes
                 self._reply_to_comment(comment, techniques_to_translate)
 
         print("Replied!\n_____________________")
-        return
 
     def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
         """
