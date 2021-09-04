@@ -253,16 +253,16 @@ class Bot:
         try:
             comment.reply(text)
         except praw.exceptions.APIException as e:
-            logging.info(e)
+            logging.exception(e)
             if e.error_type == "DELETED_COMMENT":
                 logging.info(
                     "Comment that was being replied to was found to be deleted, no reply made."
                 )
             else:
                 # TODO: Think of a better way to handle
-                logging.info("Sleeping 10 min, then retry")
+                logging.warning("Sleeping 10 min, then retry")
                 sleep(10 * 60)
-                logging.info("Retrying")
+                logging.warning("Retrying")
                 self._reply_to_comment(comment, techniques_to_translate)
 
         logging.info("Replied!\n_____________________")

@@ -24,5 +24,7 @@ if __name__ == "__main__":
 
     try:
         main.main()
+    except Exception as e:
+        logging.exception(e)
     finally:
         logging.shutdown()
