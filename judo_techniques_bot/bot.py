@@ -1,3 +1,4 @@
+import datetime
 from itertools import product
 from time import sleep
 from typing import List, Set
@@ -48,17 +49,17 @@ class Bot:
         self.data = data
 
     def run(self):
-        print("Bot Started")
+        print(f"{datetime.datetime.utcnow()}\tBot starting...")
 
         stream = self._initialize()
 
-        print("Reading comments...")
+        print(f"{datetime.datetime.utcnow()}\tReading comments...")
         for comment in (
             comment
             for comment in stream.comments(skip_existing=True)
             if comment.author.name != REDDIT_USERNAME
         ):  # Skips bot's own comment
-            print("\t" + comment.body)
+            print(f"{datetime.datetime.utcnow()}\tMessage:\n\t" + comment.body)
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
             mentioned_techniques = self._set_no_post_duplicates(mentioned_techniques)
@@ -69,16 +70,19 @@ class Bot:
             techniques_to_translate = self._filter_for_translations(
                 mentioned_techniques
             )
+            print(
+                f"{datetime.datetime.utcnow()}\tDetected judo techniques in comment:\n\t",
+                end="",
+            )
+            print(
+                [technique.technique_name_variant for technique in mentioned_techniques]
+            )
 
             if len(techniques_to_translate) != 0:
-                print("Detected judo techniques in comment:\n\t", end="")
                 print(
-                    [
-                        technique.technique_name_variant
-                        for technique in mentioned_techniques
-                    ]
+                    f"{datetime.datetime.utcnow()}\tProviding translations for:\n\t",
+                    end="",
                 )
-                print("Providing translations for:\n\t", end="")
                 print(
                     [
                         technique.technique_name_variant
@@ -89,11 +93,14 @@ class Bot:
             else:
                 # do nothing
                 print(
+                    f"{datetime.datetime.utcnow()}\t"
                     "No judo techniques translated from the comment\n_____________________"
                 )
 
     def _initialize(self):
-        print("Initializing")
+        print(
+            f"{datetime.datetime.utcnow()}\tBot connecting to subreddits: {SUBREDDITS}..."
+        )
         reddit = praw.Reddit(
             user_agent=USER_AGENT,
             client_id=CLIENT_ID,
@@ -102,7 +109,7 @@ class Bot:
             password=REDDIT_PASSWORD,
         )
 
-        print("Initialisation Done")
+        print(f"{datetime.datetime.utcnow()}\tBot connection to reddit done!")
         return reddit.subreddit(SUBREDDITS).stream
 
     def _get_mentioned_techniques_from_comment(
@@ -253,16 +260,17 @@ class Bot:
             print(e)
             if e.error_type == "DELETED_COMMENT":
                 print(
+                    f"{datetime.datetime.utcnow()}\t"
                     "Comment that was being replied to was found to be deleted, no reply made."
                 )
             else:
                 # TODO: Think of a better way to handle
-                print("Sleeping 10 min, then retry")
+                print(f"{datetime.datetime.utcnow()}\tSleeping 10 min, then retry")
                 sleep(10 * 60)
-                # retry posting after 10 minutes
+                print(f"{datetime.datetime.utcnow()}\tRetrying")
                 self._reply_to_comment(comment, techniques_to_translate)
 
-        print("Replied!\n_____________________")
+        print(f"{datetime.datetime.utcnow()}\tReplied!\n_____________________")
 
     def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
         """
