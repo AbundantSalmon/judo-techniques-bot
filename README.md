@@ -18,6 +18,10 @@ python3 -m judo_techniques_bot
 ## Tests
 
 ```bash
+# See test coverage
+coverage report
+
+# run tests
 python3 -m unittest
 ```
 
