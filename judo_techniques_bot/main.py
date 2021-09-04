@@ -1,4 +1,5 @@
 import datetime
+import logging
 from pathlib import Path
 
 from bot import Bot
@@ -9,10 +10,10 @@ from utils import pickle_dictionary
 
 
 def main():
-    print(f"{datetime.datetime.utcnow()}\tChecking migrations...")
+    logging.info(f"Checking migrations...")
     run_any_missing_migrations()
-    print(f"{datetime.datetime.utcnow()}\tMigrations dealt with!")
-    print(f"{datetime.datetime.utcnow()}\tRunning...")
+    logging.info("Migrations dealt with!")
+    logging.info("Running...")
 
     # recreate_database()
 
@@ -30,10 +31,10 @@ def run_any_missing_migrations():
     from alembic import command
     from alembic.config import Config
 
-    print(f"{datetime.datetime.utcnow()}\tRunning migrations")
+    logging.info("Running migrations")
     alembic_cfg = Config(Path(__file__).parent / "alembic.ini")
     command.upgrade(alembic_cfg, "head")
-    print(f"{datetime.datetime.utcnow()}\tMigrations complete")
+    logging.info("Migrations complete")
 
 
 if __name__ == "__main__":

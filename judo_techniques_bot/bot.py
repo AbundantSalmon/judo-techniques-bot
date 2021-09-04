@@ -1,4 +1,5 @@
 import datetime
+import logging
 from itertools import product
 from time import sleep
 from typing import List, Set
@@ -49,17 +50,17 @@ class Bot:
         self.data = data
 
     def run(self):
-        print(f"{datetime.datetime.utcnow()}\tBot starting...")
+        logging.info("Bot starting...")
 
         stream = self._initialize()
 
-        print(f"{datetime.datetime.utcnow()}\tReading comments...")
+        logging.info("Reading comments...")
         for comment in (
             comment
             for comment in stream.comments(skip_existing=True)
             if comment.author.name != REDDIT_USERNAME
         ):  # Skips bot's own comment
-            print(f"{datetime.datetime.utcnow()}\tMessage:\n\t" + comment.body)
+            logging.info("Message:\n\t" + comment.body)
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
             mentioned_techniques = self._set_no_post_duplicates(mentioned_techniques)
@@ -70,20 +71,18 @@ class Bot:
             techniques_to_translate = self._filter_for_translations(
                 mentioned_techniques
             )
-            print(
-                f"{datetime.datetime.utcnow()}\tDetected judo techniques in comment:\n\t",
-                end="",
+            logging.info(
+                "Detected judo techniques in comment:\n\t",
             )
-            print(
+            logging.info(
                 [technique.technique_name_variant for technique in mentioned_techniques]
             )
 
             if len(techniques_to_translate) != 0:
-                print(
-                    f"{datetime.datetime.utcnow()}\tProviding translations for:\n\t",
-                    end="",
+                logging.info(
+                    "Providing translations for:\n\t",
                 )
-                print(
+                logging.info(
                     [
                         technique.technique_name_variant
                         for technique in techniques_to_translate
@@ -92,15 +91,12 @@ class Bot:
                 self._reply_to_comment(comment, techniques_to_translate)
             else:
                 # do nothing
-                print(
-                    f"{datetime.datetime.utcnow()}\t"
+                logging.info(
                     "No judo techniques translated from the comment\n_____________________"
                 )
 
     def _initialize(self):
-        print(
-            f"{datetime.datetime.utcnow()}\tBot connecting to subreddits: {SUBREDDITS}..."
-        )
+        logging.info(f"Bot connecting to subreddits: {SUBREDDITS}...")
         reddit = praw.Reddit(
             user_agent=USER_AGENT,
             client_id=CLIENT_ID,
@@ -109,7 +105,7 @@ class Bot:
             password=REDDIT_PASSWORD,
         )
 
-        print(f"{datetime.datetime.utcnow()}\tBot connection to reddit done!")
+        logging.info("Bot connection to reddit done!")
         return reddit.subreddit(SUBREDDITS).stream
 
     def _get_mentioned_techniques_from_comment(
@@ -257,20 +253,19 @@ class Bot:
         try:
             comment.reply(text)
         except praw.exceptions.APIException as e:
-            print(e)
+            logging.info(e)
             if e.error_type == "DELETED_COMMENT":
-                print(
-                    f"{datetime.datetime.utcnow()}\t"
+                logging.info(
                     "Comment that was being replied to was found to be deleted, no reply made."
                 )
             else:
                 # TODO: Think of a better way to handle
-                print(f"{datetime.datetime.utcnow()}\tSleeping 10 min, then retry")
+                logging.info("Sleeping 10 min, then retry")
                 sleep(10 * 60)
-                print(f"{datetime.datetime.utcnow()}\tRetrying")
+                logging.info("Retrying")
                 self._reply_to_comment(comment, techniques_to_translate)
 
-        print(f"{datetime.datetime.utcnow()}\tReplied!\n_____________________")
+        logging.info("Replied!\n_____________________")
 
     def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
         """
