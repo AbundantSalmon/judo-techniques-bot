@@ -29,8 +29,7 @@ def run_any_missing_migrations():
     from alembic import command
     from alembic.config import Config
 
-    print("Running migrations")
-    alembic_cfg = Config("alembic.ini")
+    alembic_cfg = Config(Path(__file__).parent / "alembic.ini")
     command.upgrade(alembic_cfg, "head")
     print("Migrations Complete")
 
