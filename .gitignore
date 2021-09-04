@@ -139,4 +139,4 @@ cython_debug/
 
 # Project gitignore
 judo_techniques_bot/config.py
-judo_techniques_bot/logs/
+logs/

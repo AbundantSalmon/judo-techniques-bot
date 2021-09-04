@@ -6,10 +6,11 @@ from pathlib import Path
 import main
 from sqlalchemy.orm.session import close_all_sessions
 
+LOG_LOCATION = Path(__file__).parent.parent / "logs/all.log"
+
 if __name__ == "__main__":
-    log_location = Path(__file__).parent / "logs/all.log"
     try:
-        os.makedirs("/".join(str(log_location).split("/")[:-1]), exist_ok=False)
+        os.makedirs("/".join(str(LOG_LOCATION).split("/")[:-1]), exist_ok=False)
     except OSError:
         pass
 
@@ -18,7 +19,7 @@ if __name__ == "__main__":
         format="%(asctime)s\t%(levelname)s\t%(message)s",
         level=logging.INFO,
         handlers=[
-            logging.FileHandler(log_location),
+            logging.FileHandler(LOG_LOCATION),
             logging.StreamHandler(),
         ],
     )
