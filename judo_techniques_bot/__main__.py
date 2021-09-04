@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 import main
+from sqlalchemy.orm.session import close_all_sessions
 
 if __name__ == "__main__":
     log_location = Path(__file__).parent / "logs/all.log"
@@ -26,5 +27,8 @@ if __name__ == "__main__":
         main.main()
     except Exception as e:
         logging.exception(e)
+        logging.warning("Uncaught exception occurred while running, trying again.")
+        main.main()
     finally:
+        close_all_sessions()
         logging.shutdown()

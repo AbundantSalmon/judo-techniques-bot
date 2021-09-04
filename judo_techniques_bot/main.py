@@ -10,6 +10,7 @@ from utils import pickle_dictionary
 
 
 def main():
+    close_all_sessions()
     logging.info(f"Checking migrations...")
     run_any_missing_migrations()
     logging.info("Migrations dealt with!")
@@ -23,8 +24,6 @@ def main():
 
     bot = Bot(techniques_data)
     bot.run()
-
-    close_all_sessions()
 
 
 def run_any_missing_migrations():
