@@ -1,4 +1,3 @@
-import datetime
 import logging
 from itertools import product
 from time import sleep
