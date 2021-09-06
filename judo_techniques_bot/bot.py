@@ -246,9 +246,8 @@ class Bot:
             f"\n\nAny missed names may have already been translated in my "
             + "previous comments in the post."
             + "\n\n______________________\n\n"
-            + f"Judo Bot {VERSION}: If you have any comments or suggestions "
-            + "please don't hesitate to direct message "
-            + "[me](https://reddit.com/message/compose/?to=JudoTechniquesBot).\n\n"
+            + f"^(Judo Techniques Bot: v{VERSION}.)"
+            " ^(See my) [^(code)](https://github.com/AbundantSalmon/judo-techniques-bot)\n\n"
         )
         try:
             comment.reply(text)
