@@ -38,8 +38,8 @@ class Technique(Base):
         dictionary_of_techniques = {}
         with session_scope() as s:
             for tech in s.query(Technique).all():
-                for japaneses_name in tech.japanese_names:
-                    dictionary_of_techniques[japaneses_name] = {
+                for japanese_name in tech.japanese_names:
+                    dictionary_of_techniques[japanese_name] = {
                         "id": tech.id,
                         "japanese_display_name": tech.japanese_display_name,
                         "english_names": tech.english_names,
