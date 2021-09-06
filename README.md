@@ -1,11 +1,20 @@
 # Judo Techniques Bot
 
+This is a reddit bot that runs on the [r/bjj](https://www.reddit.com/r/bjj/)
+subreddit. It translates the Japanese names of judo techniques into their
+commons english names and provides links to videos of those techniques.
+
 # Stack
 
 - Python
-- Postgresql
+- PostgreSQL
 - SQLAlchemy
   - Alembic
+
+# Todo
+
+- Optimise some of the variant name checking
+- Setup local development database docker
 
 # Development FAQ
 
