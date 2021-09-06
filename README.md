@@ -1,6 +1,9 @@
 # Judo Techniques Bot
 
-This is a reddit bot that runs on the [r/bjj](https://www.reddit.com/r/bjj/)
+[![Translating since - 2019-06-03](https://img.shields.io/badge/Translating_since-2019--06--03-2ea44f)](https://)
+
+This is a reddit [bot](https://www.reddit.com/user/JudoTechniquesBot/)
+that runs on the [r/bjj](https://www.reddit.com/r/bjj/)
 subreddit. It translates the Japanese names of judo techniques into their
 commons english names and provides links to videos of those techniques.
 
