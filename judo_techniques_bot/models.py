@@ -13,7 +13,7 @@ class Technique(Base):
     japanese_display_name = Column(String, unique=True)
     japanese_names = Column(postgresql.ARRAY(String), default=[])
     english_names = Column(postgresql.ARRAY(String), default=[])
-    video_url = Column(String, nullable=False)
+    video_url = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
