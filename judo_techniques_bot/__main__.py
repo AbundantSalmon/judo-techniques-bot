@@ -24,12 +24,12 @@ if __name__ == "__main__":
         ],
     )
 
-    try:
-        main.main()
-    except Exception as e:
-        logging.exception(e)
-        logging.warning("Uncaught exception occurred while running, trying again.")
-        main.main()
-    finally:
-        close_all_sessions()
-        logging.shutdown()
+    while True:
+        try:
+            main.main()
+        except Exception as e:
+            logging.exception(e)
+            logging.warning("Uncaught exception occurred while running, trying again.")
+        finally:
+            close_all_sessions()
+            logging.shutdown()
