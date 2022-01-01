@@ -6,4 +6,4 @@ psycopg2==2.9.1							# postgresql adaptor
 alembic==1.6.5 							# migrations
 
 # reddit
-praw==7.4.0
+praw==7.5.0
