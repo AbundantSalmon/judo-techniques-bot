@@ -16,6 +16,8 @@ from config import (
 from db import session_scope
 from models import DetectedJudoTechniqueMentionEvent
 
+logger = logging.getLogger(__name__)
+
 
 class MentionedTechnique:
     """
@@ -49,17 +51,17 @@ class Bot:
         self.data = data
 
     def run(self):
-        logging.info("Bot starting...")
+        logger.info("Bot starting...")
 
         stream = self._initialize()
 
-        logging.info("Reading comments...")
+        logger.info("Reading comments...")
         for comment in (
             comment
             for comment in stream.comments(skip_existing=True)
             if comment.author.name != REDDIT_USERNAME
         ):  # Skips bot's own comment
-            logging.info("Message:\t" + comment.body)
+            logger.info("Message:\t" + comment.body)
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
             mentioned_techniques = self._set_no_post_duplicates(mentioned_techniques)
@@ -70,18 +72,18 @@ class Bot:
             techniques_to_translate = self._filter_for_translations(
                 mentioned_techniques
             )
-            logging.info(
+            logger.info(
                 "Detected judo techniques in comment:",
             )
-            logging.info(
+            logger.info(
                 [technique.technique_name_variant for technique in mentioned_techniques]
             )
 
             if len(techniques_to_translate) != 0:
-                logging.info(
+                logger.info(
                     "Providing translations for:",
                 )
-                logging.info(
+                logger.info(
                     [
                         technique.technique_name_variant
                         for technique in techniques_to_translate
@@ -90,12 +92,12 @@ class Bot:
                 self._reply_to_comment(comment, techniques_to_translate)
             else:
                 # do nothing
-                logging.info(
+                logger.info(
                     "No judo techniques translated from the comment\n_____________________"
                 )
 
     def _initialize(self):
-        logging.info(f"Bot connecting to subreddits: {SUBREDDITS}...")
+        logger.info(f"Bot connecting to subreddits: {SUBREDDITS}...")
         reddit = praw.Reddit(
             user_agent=USER_AGENT,
             client_id=CLIENT_ID,
@@ -104,7 +106,7 @@ class Bot:
             password=REDDIT_PASSWORD,
         )
 
-        logging.info("Bot connection to reddit done!")
+        logger.info("Bot connection to reddit done!")
         return reddit.subreddit(SUBREDDITS).stream
 
     def _get_mentioned_techniques_from_comment(
@@ -251,19 +253,20 @@ class Bot:
         try:
             comment.reply(text)
         except praw.exceptions.APIException as e:
-            logging.exception(e)
+            logger.exception(e)
             if e.error_type == "DELETED_COMMENT":
-                logging.info(
+                logger.info(
                     "Comment that was being replied to was found to be deleted, no reply made."
                 )
             else:
                 # TODO: Think of a better way to handle
-                logging.warning("Sleeping 10 min, then retry")
+                logger.exception(e)  # Capture exception to understand what is happening
+                logger.warning("Sleeping 10 min, then retry")
                 sleep(10 * 60)
-                logging.warning("Retrying")
+                logger.warning("Retrying")
                 self._reply_to_comment(comment, techniques_to_translate)
 
-        logging.info("Replied!\n_____________________")
+        logger.info("Replied!\n_____________________")
 
     def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
         """

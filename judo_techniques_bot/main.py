@@ -8,13 +8,15 @@ from models import Technique
 from sqlalchemy.orm.session import close_all_sessions
 from utils import pickle_dictionary
 
+logger = logging.getLogger(__name__)
+
 
 def main():
     close_all_sessions()
-    logging.info(f"Checking migrations...")
+    logger.info(f"Checking migrations...")
     # run_any_missing_migrations()
-    logging.info("Migrations dealt with!")
-    logging.info("Running...")
+    logger.info("Migrations dealt with!")
+    logger.info("Running...")
 
     # recreate_database()
 
@@ -37,10 +39,10 @@ def run_any_missing_migrations():
     from alembic import command
     from alembic.config import Config
 
-    logging.info("Running migrations")
+    logger.info("Running migrations")
     alembic_cfg = Config(Path(__file__).parent / "alembic.ini")
     command.upgrade(alembic_cfg, "head")
-    logging.info("Migrations complete")
+    logger.info("Migrations complete")
 
 
 if __name__ == "__main__":
