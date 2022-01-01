@@ -2,9 +2,10 @@ from logging.config import fileConfig
 
 from alembic import context
 from config import DATABASE_URI
-from db import Base
 from models import DetectedJudoTechniqueMentionEvent, Technique
 from sqlalchemy import engine_from_config, pool
+
+from db import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -12,7 +13,8 @@ config = context.config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+if config.attributes.get("configure_logger", True):
+    fileConfig(config.config_file_name)
 
 # Override alembic.ini with postsql connection from config
 config.set_main_option("sqlalchemy.url", DATABASE_URI)

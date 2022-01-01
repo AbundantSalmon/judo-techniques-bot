@@ -3,18 +3,19 @@ import logging
 from pathlib import Path
 
 from bot import Bot
-from db import recreate_database
 from models import Technique
 from sqlalchemy.orm.session import close_all_sessions
 from utils import pickle_dictionary
+
+from db import recreate_database
 
 logger = logging.getLogger(__name__)
 
 
 def main():
     close_all_sessions()
-    logger.info(f"Checking migrations...")
-    # run_any_missing_migrations()
+    logger.info("Checking migrations...")
+    run_any_missing_migrations()
     logger.info("Migrations dealt with!")
     logger.info("Running...")
 
@@ -29,18 +30,16 @@ def main():
 
 
 def run_any_missing_migrations():
-    """
-    Currently hangs on the below message, can manually run instead.
-        2021-09-06 12:18:00,359 INFO    Checking migrations...
-        2021-09-06 12:18:00,396 INFO    Running migrations
-        INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
-        INFO  [alembic.runtime.migration] Will assume transactional DDL.
-    """
     from alembic import command
     from alembic.config import Config
 
     logger.info("Running migrations")
-    alembic_cfg = Config(Path(__file__).parent / "alembic.ini")
+    alembic_cfg = Config(
+        Path(__file__).parent / "alembic.ini",
+        attributes={
+            "configure_logger": False,  # Prevent alembic default logging from overriding the apps
+        },
+    )
     command.upgrade(alembic_cfg, "head")
     logger.info("Migrations complete")
 
