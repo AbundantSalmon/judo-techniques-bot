@@ -12,6 +12,7 @@ services:
       CLIENT_SECRET: ${CLIENT_SECRET}
       REDDIT_USERNAME: ${REDDIT_USERNAME}
       REDDIT_PASSWORD: ${REDDIT_PASSWORD}
+      SUBREDDITS: ${SUBREDDITS}
     volumes:
       - .:/app/
     stdin_open: true
