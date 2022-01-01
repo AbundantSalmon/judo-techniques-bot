@@ -1,13 +1,9 @@
-import datetime
 import logging
 from pathlib import Path
 
 from bot import Bot
 from models import Technique
 from sqlalchemy.orm.session import close_all_sessions
-from utils import pickle_dictionary
-
-from db import recreate_database
 
 logger = logging.getLogger(__name__)
 
@@ -19,11 +15,7 @@ def main():
     logger.info("Migrations dealt with!")
     logger.info("Running...")
 
-    # recreate_database()
-
     techniques_data = Technique.get_cached_techniques()
-    # for regenerating test fixture data
-    # pickle_dictionary(techniques_data, "techniques_test_data")
 
     bot = Bot(techniques_data)
     bot.run()

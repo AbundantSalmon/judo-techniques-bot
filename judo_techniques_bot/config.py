@@ -1,0 +1,13 @@
+import os
+
+DATABASE_URI = os.getenv("DATABASE_URI")
+
+USER_AGENT = os.getenv("USER_AGENT")
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+REDDIT_USERNAME = os.getenv("REDDIT_USERNAME")
+REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")
+
+SUBREDDITS = os.getenv("SUBREDDITS")
+
+VERSION = "0.7"

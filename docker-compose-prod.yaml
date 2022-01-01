@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  judo_techniques_bot:
+    container_name: judo_techniques_bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URI: postgresql+psycopg2://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+      USER_AGENT: ${USER_AGENT}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      REDDIT_USERNAME: ${REDDIT_USERNAME}
+      REDDIT_PASSWORD: ${REDDIT_PASSWORD}
+    volumes:
+      - .:/app/
+    stdin_open: true
+    restart: always
+    tty: true

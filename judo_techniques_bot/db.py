@@ -1,9 +1,8 @@
 from contextlib import contextmanager
 
+from config import DATABASE_URI
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-
-from config import DATABASE_URI
 
 """
 Adapted from https://www.learndatasci.com/tutorials/using-databases-python-postgres-sqlalchemy-and-alembic/
