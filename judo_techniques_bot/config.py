@@ -1,5 +1,16 @@
 import os
 
+_PRODUCTION = "production"
+_DEVELOPMENT = "development"
+
+ENVIRONMENT = (
+    _DEVELOPMENT
+    if os.getenv("ENVIRONMENT", "production") != _PRODUCTION
+    else _PRODUCTION
+)
+
+DEBUG = ENVIRONMENT == _DEVELOPMENT
+
 DATABASE_URI = os.environ["DATABASE_URI"]
 
 USER_AGENT = os.environ["USER_AGENT"]
@@ -10,6 +21,6 @@ REDDIT_PASSWORD = os.environ["REDDIT_PASSWORD"]
 
 SUBREDDITS = os.environ["SUBREDDITS"]
 
-SUBREDDITS = os.getenv("SUBREDDITS")
+SENTRY_DSN = os.environ["SENTRY_DSN"]
 
 VERSION = "0.7"

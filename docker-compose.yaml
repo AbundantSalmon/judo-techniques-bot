@@ -13,6 +13,8 @@ services:
       REDDIT_USERNAME: ${REDDIT_USERNAME}
       REDDIT_PASSWORD: ${REDDIT_PASSWORD}
       SUBREDDITS: ${SUBREDDITS}
+      SENTRY_DSN: ${SENTRY_DSN}
+      ENVIRONMENT: ${ENVIRONMENT}
     volumes:
       - .:/app/
     stdin_open: true

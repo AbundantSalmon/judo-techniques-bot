@@ -2,11 +2,22 @@ import logging
 import os
 from pathlib import Path
 
+import config
 import main
+import sentry_sdk
 from sqlalchemy.orm.session import close_all_sessions
 
 from judo_techniques_bot.custom_logging import CustomFormatter
 
+# Sentry
+sentry_sdk.init(
+    dsn=config.SENTRY_DSN,
+    debug=config.DEBUG,
+    environment=config.ENVIRONMENT,
+    traces_sample_rate=1.0,
+)
+
+# Logging
 LOG_LOCATION = Path(__file__).parent.parent / "logs/all.log"
 
 try:
@@ -35,6 +46,7 @@ if __name__ == "__main__":
             main.main()
         except Exception as e:
             logger.exception(e)
+            sentry_sdk.capture_exception(e)
             logger.warning("Uncaught exception occurred while running, trying again.")
         finally:
             close_all_sessions()
