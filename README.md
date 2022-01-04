@@ -43,6 +43,7 @@ python judo_techniques_bot/load_data.py
 
 ```bash
 # See test coverage
+coverage run -m unittest
 coverage report
 
 # run tests
