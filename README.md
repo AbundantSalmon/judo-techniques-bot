@@ -1,6 +1,6 @@
 # Judo Techniques Bot
 
-[![Translating since - 2019-06-03](https://img.shields.io/badge/Translating_since-2019--06--03-2ea44f)](https://judo-techniques-bot-stats.vercel.app/)
+[![Translating since - 2019-06-03](https://img.shields.io/badge/Translating_since-2019--06--03-2ea44f)](https://judo-techniques-bot-stats.vercel.app/) [![Run Python Tests](https://github.com/AbundantSalmon/judo-techniques-bot/actions/workflows/cy.yml/badge.svg)](https://github.com/AbundantSalmon/judo-techniques-bot/actions/workflows/cy.yml)
 
 This is a reddit [bot](https://www.reddit.com/user/JudoTechniquesBot/)
 that runs on the [r/bjj](https://www.reddit.com/r/bjj/) and [r/Ju_Jutsu](https://www.reddit.com/r/Ju_Jutsu/)
