@@ -148,5 +148,8 @@ with mock.patch.dict(
 
             self.assertEqual(len(techniques), 0)
 
+        def test_fail(self):
+            self.fail("Not implemented")
+
     if __name__ == "__main__":
         unittest.main()
