@@ -19,8 +19,8 @@ Stats can be found at: https://judo-techniques-bot-stats.vercel.app/
 
 # Todo
 
-- Optimise some of the variant name checking
-- Setup local development database docker
+- [ ] Optimise some of the variant name checking
+- [x] Setup local development database docker
 
 # Development FAQ
 
