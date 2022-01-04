@@ -21,6 +21,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r base.txt
+          pip install -r requirements/base.txt
       - name: Run tests with unittest
         run: python -m unittest
