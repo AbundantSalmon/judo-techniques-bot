@@ -258,6 +258,10 @@ class Bot:
                 logger.info(
                     "Comment that was being replied to was found to be deleted, no reply made."
                 )
+            elif e.error_type == "COMMENT_UNREPLIABLE":
+                logger.info(
+                    "Comment that was being replied to was found to be un-repliable, no reply made."
+                )
             else:
                 # TODO: Think of a better way to handle
                 logger.exception(e)  # Capture exception to understand what is happening
