@@ -254,16 +254,18 @@ class Bot:
             comment.reply(text)
         except praw.exceptions.APIException as e:
             logger.exception(e)
-            if e.error_type == "DELETED_COMMENT":
+            EXCEPTION_ERRORS = [
+                "DELETED_COMMENT",
+                "COMMENT_UNREPLIABLE",
+                "SOMETHING_IS_BROKEN",
+            ]
+            if e.error_type in EXCEPTION_ERRORS:
                 logger.info(
-                    "Comment that was being replied to was found to be deleted, no reply made."
-                )
-            elif e.error_type == "COMMENT_UNREPLIABLE":
-                logger.info(
-                    "Comment that was being replied to was found to be un-repliable, no reply made."
+                    f"Comment that was being replied to was found to be {e.error_type}, no reply made."
                 )
             else:
-                # TODO: Think of a better way to handle
+                # TODO: Think of a better way to handle, potenially have a retry
+                # counter and skip after X tries
                 logger.exception(e)  # Capture exception to understand what is happening
                 logger.warning("Sleeping 10 min, then retry")
                 sleep(10 * 60)
