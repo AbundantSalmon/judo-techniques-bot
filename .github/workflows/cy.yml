@@ -24,3 +24,8 @@ jobs:
           pip install -r requirements/base.txt
       - name: Run tests with unittest
         run: python -m unittest
+
+  call-build-judo-techniques-bot:
+    if: ${{ github.event_name == 'push' }}
+    uses: ./.github/workflows/aws.yml
+    secrets: inherit
