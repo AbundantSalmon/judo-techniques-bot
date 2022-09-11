@@ -1,8 +1,7 @@
 name: Build and push to ECR
 
 on:
-  push:
-    branches: ["main"]
+  workflow_call:
 
 env:
   AWS_REGION: us-east-2
