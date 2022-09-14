@@ -7,9 +7,9 @@ that runs on the [r/bjj](https://www.reddit.com/r/bjj/) and [r/Ju_Jutsu](https:/
 subreddits. It translates the Japanese names of judo techniques into their
 commons english names and provides links to videos of those techniques.
 
-Stats can be found at: https://judo-techniques-bot-stats.vercel.app/
+Stats can be found at: <https://judo-techniques-bot-stats.vercel.app/>
 
-# Stack
+## Stack
 
 - Python
 - PostgreSQL
@@ -17,20 +17,21 @@ Stats can be found at: https://judo-techniques-bot-stats.vercel.app/
   - Alembic
 - Docker
 
-# Todo
+## Todo
 
 - [ ] Optimise some of the variant name checking
 - [x] Setup local development database docker
 
-# Development FAQ
+## Development FAQ
 
-## Run
+### Run
 
 ```bash
 python3 -m judo_techniques_bot
 ```
 
 With local development db:
+
 ```bash
 # Startup docker with database, bot and adminer
 docker-compose up
@@ -39,7 +40,7 @@ docker-compose up
 python judo_techniques_bot/load_data.py
 ```
 
-## Tests
+### Tests
 
 ```bash
 # See test coverage
@@ -50,15 +51,15 @@ coverage report
 python3 -m unittest
 ```
 
-## Database
+### Database
 
-### Generate Migration
+#### Generate Migration
 
 ```bash
 alembic revision --autogenerate -m "message"
 ```
 
-### Run Migration
+#### Run Migration
 
 ```bash
 alembic upgrade head
@@ -66,8 +67,6 @@ alembic upgrade head
 
 Any unrun migrations will be run automatically when the bot is started.
 
-# Production FAQ
-## Run
-```bash
-./production_script.sh
-```
+## Production FAQ
+
+Deployed as docker container to an ec2 instance using terraform.
