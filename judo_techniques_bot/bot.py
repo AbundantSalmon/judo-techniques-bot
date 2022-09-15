@@ -56,11 +56,13 @@ class Bot:
         stream = self._initialize()
 
         logger.info("Reading comments...")
-        for comment in (
-            comment
-            for comment in stream.comments(skip_existing=True)
-            if comment.author.name != REDDIT_USERNAME
-        ):  # Skips bot's own comment
+        for comment in iter(stream.comments(skip_existing=True)):
+            if comment.author is None:
+                # For some unknown reason, comments can have no authors, skip these
+                continue
+            if comment.author.name != REDDIT_USERNAME:
+                # Skips bot's own comment
+                continue
             logger.info("Message:\t" + comment.body)
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
