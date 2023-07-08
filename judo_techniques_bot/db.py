@@ -11,7 +11,7 @@ Adapted from https://www.learndatasci.com/tutorials/using-databases-python-postg
 engine = create_engine(DATABASE_URI, future=True)
 
 # Global session
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, future=True)
 
 # Declarative base to be used with all models
 Base = declarative_base()
