@@ -1,12 +1,12 @@
 ### Base Packages
 
 # Database
-SQLAlchemy==1.4.41						# ORM
-psycopg2==2.9.3							# postgresql adaptor
-alembic==1.8.1 							# migrations
+SQLAlchemy==2.0.18						# ORM
+psycopg2==2.9.6							# postgresql adaptor
+alembic==1.11.1							# migrations
 
 # reddit
-praw==7.6.0
+praw==7.7.0
 
 # Monitoring
-sentry-sdk==1.9.8
+sentry-sdk==1.27.1
