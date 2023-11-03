@@ -6,12 +6,12 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "abundant-salmon-terraform-state"
-    key    = "judo-techniques-bot/terraform.tfstate"
-    region = "us-east-2"
+  cloud {
+    organization = "AbundantSalmon"
+    workspaces { name = "judo-techniques-bot" }
   }
 }
+
 
 provider "aws" {
   region = var.region
