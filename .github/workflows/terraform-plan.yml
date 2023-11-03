@@ -7,7 +7,7 @@ env:
   TF_CLOUD_ORGANIZATION: "AbundantSalmon"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "judo-techniques-bot"
-  CONFIG_DIRECTORY: "./"
+  CONFIG_DIRECTORY: "./terraform"
 
 jobs:
   terraform:
