@@ -1,10 +1,8 @@
 name: "Terraform Apply"
 
 on:
-  workflow_run:
-    workflows: ["Build and push to ECR"]
-    types:
-      - completed
+  workflow_call:
+  workflow_dispatch:
 
 env:
   TF_CLOUD_ORGANIZATION: "AbundantSalmon"
@@ -18,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

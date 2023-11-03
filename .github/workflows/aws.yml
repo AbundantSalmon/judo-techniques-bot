@@ -2,6 +2,7 @@ name: Build and push to ECR
 
 on:
   workflow_call:
+  workflow_dispatch:
 
 env:
   AWS_REGION: us-east-2
@@ -54,3 +55,9 @@ jobs:
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+
+  call-deploy-judo-techniques-bot:
+    if: ${{ github.event_name == 'push' }}
+    needs: build-judo-techniques-bot
+    uses: ./.github/workflows/terraform-apply.yml
+    secrets: inherit
