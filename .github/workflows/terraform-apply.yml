@@ -21,6 +21,7 @@ jobs:
         uses: dflook/terraform-apply@v1
         with:
           path: ./terraform
+          workspace: "judo-techniques-bot"
           auto_approve: true
           replace: |
             aws_instance.judo-techniques-bot
