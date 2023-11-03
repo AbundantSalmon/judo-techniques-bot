@@ -26,3 +26,5 @@ jobs:
         with:
           path: "./terraform"
           workspace: "judo-techniques-bot"
+          replace: |
+            aws_instance.judo-techniques-bot
