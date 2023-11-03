@@ -184,8 +184,8 @@ resource "aws_iam_instance_profile" "ec2-judo-techniques-bot" {
 }
 
 resource "aws_instance" "judo-techniques-bot" {
-  ami                    = "ami-0568773882d492fc8"
-  instance_type          = "t2.micro"
+  ami                    = "ami-07dcd11247b816084"
+  instance_type          = "t4g.nano"
   vpc_security_group_ids = [aws_security_group.instance.id]
   iam_instance_profile   = aws_iam_instance_profile.ec2-judo-techniques-bot.name
 
@@ -208,7 +208,8 @@ resource "aws_instance" "judo-techniques-bot" {
     echo "SENTRY_DSN=$(aws ssm get-parameters --names ${data.aws_ssm_parameter.sentry_dsn.name} --query 'Parameters[0].Value' --output text)" >> ${var.env-file-location}
     echo "DATABASE_URI=postgresql+psycopg2://$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_user.name} --with-decryption --query 'Parameters[0].Value' --output text):$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_pass.name} --with-decryption --query 'Parameters[0].Value' --output text)@$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_host.name} --query 'Parameters[0].Value' --output text):$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_port.name} --with-decryption --query 'Parameters[0].Value' --output text)/$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_name.name} --query 'Parameters[0].Value' --output text)" >> ${var.env-file-location}
 
-    amazon-linux-extras install docker
+    dnf update
+    dnf install -y docker
     service docker start
     chkconfig docker on
 
