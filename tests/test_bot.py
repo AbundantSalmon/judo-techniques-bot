@@ -5,7 +5,6 @@ from unittest import mock
 with mock.patch.dict(
     "os.environ",
     {
-        "DATABASE_URI": "",
         "USER_AGENT": "",
         "CLIENT_ID": "",
         "CLIENT_SECRET": "",
@@ -13,6 +12,11 @@ with mock.patch.dict(
         "REDDIT_PASSWORD": "",
         "SUBREDDITS": "",
         "SENTRY_DSN": "",
+        "DB_NAME": "",
+        "DB_USER": "",
+        "DB_PASS": "",
+        "DB_HOST": "",
+        "DB_PORT": "",
     },
 ), mock.patch("sqlalchemy.create_engine"):
     from judo_techniques_bot.bot import Bot, MentionedTechnique
