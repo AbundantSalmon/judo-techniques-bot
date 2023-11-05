@@ -206,7 +206,6 @@ resource "aws_instance" "judo-techniques-bot" {
     echo "REDDIT_PASSWORD=$(aws ssm get-parameters --names ${data.aws_ssm_parameter.reddit_password.name} --with-decryption --query 'Parameters[0].Value' --output text)" >> ${var.env-file-location}
     echo "SUBREDDITS=$(aws ssm get-parameters --names ${data.aws_ssm_parameter.subreddits.name} --query 'Parameters[0].Value' --output text)" >> ${var.env-file-location}
     echo "SENTRY_DSN=$(aws ssm get-parameters --names ${data.aws_ssm_parameter.sentry_dsn.name} --query 'Parameters[0].Value' --output text)" >> ${var.env-file-location}
-    echo "DATABASE_URI=postgresql+psycopg2://$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_user.name} --with-decryption --query 'Parameters[0].Value' --output text):$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_pass.name} --with-decryption --query 'Parameters[0].Value' --output text)@$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_host.name} --query 'Parameters[0].Value' --output text):$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_port.name} --with-decryption --query 'Parameters[0].Value' --output text)/$(aws ssm get-parameters --names ${data.aws_ssm_parameter.db_name.name} --query 'Parameters[0].Value' --output text)" >> ${var.env-file-location}
 
     dnf update
     dnf install -y docker
