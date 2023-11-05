@@ -30,5 +30,5 @@ SENTRY_DSN = os.environ["SENTRY_DSN"]
 VERSION = "0.7"
 
 DATABASE_URI = (
-    f"postgresql+psycopg2://{DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+    f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
