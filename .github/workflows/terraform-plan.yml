@@ -27,4 +27,4 @@ jobs:
           path: "./terraform"
           workspace: "judo-techniques-bot"
           replace: |
-            aws_instance.judo-techniques-bot
+            aws_ecs_service.jtb_service
