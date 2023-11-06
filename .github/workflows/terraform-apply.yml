@@ -24,4 +24,4 @@ jobs:
           workspace: "judo-techniques-bot"
           auto_approve: true
           replace: |
-            aws_instance.judo-techniques-bot
+            aws_ecs_service.jtb_service

@@ -3,12 +3,16 @@ variable "region" {
   description = "AWS region to deploy to"
 }
 
-variable "env-location" {
-  default     = "/secrets/"
-  description = "Folder location of the .env file, including trailing slash"
+variable "cluster_name" {
+  default     = "jtb_ecs-cluster"
+  description = "Name of the ECS cluster"
 }
 
-variable "env-file-location" {
-  default     = "/secrets/.env"
-  description = "Full path location of the .env file, including trailing slash"
+locals {
+
+  name = replace(var.cluster_name, " ", "_")
+  tags = {
+    Name   = var.cluster_name,
+    Module = "ECS Cluster"
+  }
 }
