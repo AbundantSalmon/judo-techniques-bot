@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.0"
+      version = "~> 5.26.0"
     }
   }
 
@@ -119,6 +119,7 @@ resource "aws_launch_template" "launch_template" {
   image_id               = "ami-02a9f359257caf3f2"
   instance_type          = "t4g.nano"
   vpc_security_group_ids = [aws_security_group.ecs_security_group.id]
+  update_default_version = true
   user_data = base64encode(
     <<EOF
 #!/bin/bash
@@ -235,7 +236,7 @@ resource "aws_ecs_service" "jtb_service" {
 resource "aws_autoscaling_group" "autoscaling_group" {
   launch_template {
     id      = aws_launch_template.launch_template.id
-    version = "$Latest"
+    version = aws_launch_template.launch_template.latest_version
   }
   availability_zones        = ["us-east-2a"]
   min_size                  = 1
@@ -244,6 +245,18 @@ resource "aws_autoscaling_group" "autoscaling_group" {
   health_check_type         = "EC2"
   health_check_grace_period = 300
   termination_policies      = ["OldestInstance"]
+
+  instance_maintenance_policy {
+    min_healthy_percentage = 100
+    max_healthy_percentage = 200
+  }
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 100
+    }
+  }
 
   tag {
     key                 = "Name"
