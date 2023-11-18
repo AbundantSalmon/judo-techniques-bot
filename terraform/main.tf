@@ -116,16 +116,20 @@ resource "aws_launch_template" "launch_template" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.ecs_node.arn
   }
-  image_id               = "ami-02a9f359257caf3f2"
+  image_id               = "ami-0090be1905998682a"
   instance_type          = "t4g.nano"
   vpc_security_group_ids = [aws_security_group.ecs_security_group.id]
   update_default_version = true
   user_data = base64encode(
     <<EOF
 #!/bin/bash
-echo "ECS_CLUSTER=${aws_ecs_cluster.jtb_ecs-cluster.name}" >> /etc/ecs/ecs.config
 dnf update
 dnf install -y ec2-instance-connect
+dnf install -y docker
+dnf install -y ecs-init
+echo "ECS_CLUSTER=${aws_ecs_cluster.jtb_ecs-cluster.name}" >> /etc/ecs/ecs.config
+service docker start
+service ecs start --no-block
 EOF
   )
 
