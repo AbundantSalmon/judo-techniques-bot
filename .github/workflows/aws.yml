@@ -24,10 +24,11 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - uses: actions/cache@v3
+      - name: Cache docker layers
+        uses: actions/cache@v3
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements/base.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -61,6 +62,8 @@ jobs:
           tags: |
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
   call-deploy-judo-techniques-bot:
     if: ${{ github.event_name == 'push' }}
