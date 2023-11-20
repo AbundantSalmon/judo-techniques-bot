@@ -116,6 +116,9 @@ resource "aws_launch_template" "launch_template" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.ecs_node.arn
   }
+  network_interfaces {
+    associate_public_ip_address = false
+  }
   image_id               = "ami-0090be1905998682a"
   instance_type          = "t4g.nano"
   vpc_security_group_ids = [aws_security_group.ecs_security_group.id]
