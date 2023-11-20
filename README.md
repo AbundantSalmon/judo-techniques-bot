@@ -69,4 +69,4 @@ Any unrun migrations will be run automatically when the bot is started.
 
 ## Production FAQ
 
-Deployed as docker container to an ec2 instance using terraform.
+Built when there is commit pushed to main using github actions and deployed as docker container to an EC2 instance on AWS ECS using terraform.
