@@ -38,6 +38,10 @@ docker-compose up
 
 # Load fixture data into the db
 python judo_techniques_bot/load_data.py
+
+or
+
+docker exec --env-file .env judo_techniques_bot python judo_techniques_bot/load_data.py
 ```
 
 ### Tests
