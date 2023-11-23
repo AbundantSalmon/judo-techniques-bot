@@ -24,4 +24,4 @@ jobs:
           workspace: "judo-techniques-bot"
           auto_approve: true
           replace: |
-            aws_ecs_service.jtb_service
+            aws_launch_template.launch_template
