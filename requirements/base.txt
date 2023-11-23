@@ -2,7 +2,7 @@
 
 # Database
 SQLAlchemy==2.0.18						# ORM
-psycopg2==2.9.6							# postgresql adaptor
+psycopg2==2.9.9							# postgresql adaptor
 alembic==1.12.1							# migrations
 
 # reddit
