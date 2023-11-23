@@ -8,7 +8,7 @@
 
 # formatting
 black==22.8.0
-isort==5.10.1
+isort==5.12.0
 
 # testing
 coverage[toml]==7.3.2
