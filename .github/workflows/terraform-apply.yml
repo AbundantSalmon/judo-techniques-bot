@@ -25,3 +25,4 @@ jobs:
           auto_approve: true
           replace: |
             aws_launch_template.launch_template
+            aws_ecs_task_definition.jtb_task_definition
