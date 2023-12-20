@@ -3,7 +3,7 @@
 # Database
 SQLAlchemy==2.0.23						# ORM
 psycopg2==2.9.9							# postgresql adaptor
-alembic==1.13.0							# migrations
+alembic==1.13.1							# migrations
 
 # reddit
 praw==7.7.1
