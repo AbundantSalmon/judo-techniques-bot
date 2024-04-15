@@ -7,7 +7,7 @@
 #sqlalchemy2-stubs==0.0.2a27
 
 # formatting
-black==24.3.0
+black==24.4.0
 isort==5.13.2
 
 # testing
