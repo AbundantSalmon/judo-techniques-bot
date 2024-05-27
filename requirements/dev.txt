@@ -11,4 +11,4 @@ black==24.4.2
 isort==5.13.2
 
 # testing
-coverage[toml]==7.5.1
+coverage[toml]==7.5.2
