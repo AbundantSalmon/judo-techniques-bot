@@ -9,4 +9,4 @@ alembic==1.13.2							# migrations
 praw==7.7.1
 
 # Monitoring
-sentry-sdk==2.9.0
+sentry-sdk==2.10.0
