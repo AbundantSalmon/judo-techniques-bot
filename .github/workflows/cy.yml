@@ -25,8 +25,8 @@ jobs:
       - name: Run tests with unittest
         run: python -m unittest
 
-  call-build-judo-techniques-bot:
-    if: ${{ github.event_name == 'push' }}
-    needs: tests
-    uses: ./.github/workflows/aws.yml
-    secrets: inherit
+  # call-build-judo-techniques-bot:
+  #   if: ${{ github.event_name == 'push' }}
+  #   needs: tests
+  #   uses: ./.github/workflows/aws.yml
+  #   secrets: inherit
