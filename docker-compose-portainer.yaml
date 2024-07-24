@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  judo_techniques_bot:
+    container_name: judo_techniques_bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      USER_AGENT: ${USER_AGENT}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      REDDIT_USERNAME: ${REDDIT_USERNAME}
+      REDDIT_PASSWORD: ${REDDIT_PASSWORD}
+      SUBREDDITS: ${SUBREDDITS}
+      SENTRY_DSN: ${SENTRY_DSN}
+      ENVIRONMENT: ${ENVIRONMENT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
