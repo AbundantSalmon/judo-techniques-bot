@@ -19,3 +19,4 @@ services:
       DB_PASS: ${DB_PASS}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
+    restart: always
