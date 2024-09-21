@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   judo_techniques_bot:
+    pull_policy: build
     container_name: judo_techniques_bot
     build:
       context: .
