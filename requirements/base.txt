@@ -6,7 +6,7 @@ psycopg2==2.9.10							# postgresql adaptor
 alembic==1.14.0							# migrations
 
 # reddit
-praw==7.8.0
+praw==7.8.1
 
 # Monitoring
 sentry-sdk==2.19.0
