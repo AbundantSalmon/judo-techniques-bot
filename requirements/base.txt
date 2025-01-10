@@ -1,7 +1,7 @@
 ### Base Packages
 
 # Database
-SQLAlchemy==2.0.36						# ORM
+SQLAlchemy==2.0.37						# ORM
 psycopg2==2.9.10							# postgresql adaptor
 alembic==1.14.0							# migrations
 
