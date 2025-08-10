@@ -63,7 +63,9 @@ class Bot:
             if comment.author.name == REDDIT_USERNAME:
                 # Skips bot's own comment
                 continue
-            logger.info("Message:\t" + comment.body)
+            logger.info(
+                "Username: " + comment.author.name + " Message:\t" + comment.body
+            )
 
             mentioned_techniques = self._get_mentioned_techniques_from_comment(comment)
             mentioned_techniques = self._set_no_post_duplicates(mentioned_techniques)
