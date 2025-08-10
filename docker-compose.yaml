@@ -19,10 +19,14 @@ services:
       DB_PASS: ${DB_PASS}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
-    volumes:
-      - .:/app/
+    # volumes:
+    #   - .:/app/
     stdin_open: true
     tty: true
+    develop:
+      watch:
+        - action: rebuild
+          path: ./judo_techniques_bot
     depends_on:
       - postgres
 
