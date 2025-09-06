@@ -1,3 +1,31 @@
+[project]
+name = "judo-techniques-bot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+
+dependencies = [
+    "alembic==1.16.5",
+    "bump-my-version>=1.2.1",
+    "praw==7.8.1",
+    "psycopg2==2.9.10",
+    "sentry-sdk==2.37.0",
+    "sqlalchemy==2.0.43",
+]
+
+[dependency-groups]
+dev = [
+    "alembic==1.16.5",
+    "black==25.1.0",
+    "coverage[toml]==7.10.6",
+    "isort==6.0.1",
+    "praw==7.8.1",
+    "psycopg2==2.9.10",
+    "sentry-sdk==2.37.0",
+    "sqlalchemy==2.0.43",
+]
+
 [tool.isort]
 profile = "black"
 multi_line_output=3

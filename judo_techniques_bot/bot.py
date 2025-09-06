@@ -52,6 +52,7 @@ class Bot:
 
     def run(self):
         logger.info("Bot starting...")
+        logger.info("Version: " + VERSION)
 
         stream = self._initialize()
 
