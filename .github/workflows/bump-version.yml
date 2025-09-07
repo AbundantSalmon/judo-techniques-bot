@@ -6,6 +6,17 @@ on:
       - main
     paths-ignore:
       - '.bumpversion.toml'
+  workflow_dispatch:
+    inputs:
+      bump-type:
+        description: "Bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
 
 jobs:
   build:
@@ -20,7 +31,7 @@ jobs:
         env:
           BUMPVERSION_TAG: "true"
         with:
-          args: minor
+          args: ${{ inputs.bump-type }}
           github-token: ${{ secrets.GH_TOKEN }}
 
       - name: Check
