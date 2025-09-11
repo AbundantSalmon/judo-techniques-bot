@@ -27,7 +27,7 @@ Stats can be found at: <https://judo-techniques-bot-stats.vercel.app/>
 ### Run
 
 ```bash
-python3 -m judo_techniques_bot
+uv run -m judo_techniques_bot
 ```
 
 With local development db:
@@ -37,22 +37,22 @@ With local development db:
 docker-compose up
 
 # Load fixture data into the db
-python judo_techniques_bot/load_data.py
+uv run judo_techniques_bot/load_data.py
 
 or
 
-docker exec --env-file .env judo_techniques_bot python judo_techniques_bot/load_data.py
+docker exec --env-file .env judo_techniques_bot uv run judo_techniques_bot/load_data.py
 ```
 
 ### Tests
 
 ```bash
 # See test coverage
-coverage run -m unittest
-coverage report
+uv run coverage run -m unittest
+uv run coverage report
 
 # run tests
-python3 -m unittest
+uv run -m unittest
 ```
 
 ### Database
@@ -60,13 +60,13 @@ python3 -m unittest
 #### Generate Migration
 
 ```bash
-alembic revision --autogenerate -m "message"
+uv run alembic revision --autogenerate -m "message"
 ```
 
 #### Run Migration
 
 ```bash
-alembic upgrade head
+uv run alembic upgrade head
 ```
 
 Any unrun migrations will be run automatically when the bot is started.
