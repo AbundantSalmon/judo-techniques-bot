@@ -304,14 +304,9 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "alembic" },
     { name = "black" },
     { name = "coverage" },
     { name = "isort" },
-    { name = "praw" },
-    { name = "psycopg2" },
-    { name = "sentry-sdk" },
-    { name = "sqlalchemy" },
 ]
 
 [package.metadata]
@@ -326,14 +321,9 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "alembic", specifier = "==1.16.5" },
     { name = "black", specifier = "==25.9.0" },
     { name = "coverage", extras = ["toml"], specifier = "==7.10.7" },
     { name = "isort", specifier = "==6.0.1" },
-    { name = "praw", specifier = "==7.8.1" },
-    { name = "psycopg2", specifier = "==2.9.10" },
-    { name = "sentry-sdk", specifier = "==2.38.0" },
-    { name = "sqlalchemy", specifier = "==2.0.43" },
 ]
 
 [[package]]
