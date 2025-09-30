@@ -47,8 +47,11 @@ class MentionedTechnique:
 
 
 class Bot:
-    def __init__(self, data) -> None:
+    MAX_RETRIES = 3
+
+    def __init__(self, data, time_between_retry: int = 10 * 60) -> None:
         self.data = data
+        self.time_between_retry = time_between_retry
 
     def run(self):
         logger.info("Bot starting...")
@@ -269,13 +272,22 @@ class Bot:
                     f"Comment that was being replied to was found to be {e.error_type}, no reply made."
                 )
             else:
-                # TODO: Think of a better way to handle, potenially have a retry
-                # counter and skip after X tries
-                logger.exception(e)  # Capture exception to understand what is happening
-                logger.warning("Sleeping 10 min, then retry")
-                sleep(10 * 60)
-                logger.warning("Retrying")
-                self._reply_to_comment(comment, techniques_to_translate)
+                for _ in range(self.MAX_RETRIES):
+                    try:
+                        logger.exception(
+                            e
+                        )  # Capture exception to understand what is happening
+                        logger.warning("Sleeping 10 min, then retry")
+                        sleep(self.time_between_retry)
+                        logger.warning("Retrying")
+                        comment.reply(text)
+                        break
+                    except praw.exceptions.APIException as inner_e:
+                        if inner_e.error_type in EXCEPTION_ERRORS:
+                            logger.info(
+                                f"Comment that was being replied to was found to be {inner_e.error_type}, no reply made."
+                            )
+                            break
 
         logger.info("Replied!\n_____________________")
 
