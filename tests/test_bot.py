@@ -1,24 +1,28 @@
 import pickle
+import praw
 import unittest
 from unittest import mock
 
-with mock.patch.dict(
-    "os.environ",
-    {
-        "USER_AGENT": "",
-        "CLIENT_ID": "",
-        "CLIENT_SECRET": "",
-        "REDDIT_USERNAME": "",
-        "REDDIT_PASSWORD": "",
-        "SUBREDDITS": "",
-        "SENTRY_DSN": "",
-        "DB_NAME": "",
-        "DB_USER": "",
-        "DB_PASS": "",
-        "DB_HOST": "",
-        "DB_PORT": "",
-    },
-), mock.patch("sqlalchemy.create_engine"):
+with (
+    mock.patch.dict(
+        "os.environ",
+        {
+            "USER_AGENT": "",
+            "CLIENT_ID": "",
+            "CLIENT_SECRET": "",
+            "REDDIT_USERNAME": "",
+            "REDDIT_PASSWORD": "",
+            "SUBREDDITS": "",
+            "SENTRY_DSN": "",
+            "DB_NAME": "",
+            "DB_USER": "",
+            "DB_PASS": "",
+            "DB_HOST": "",
+            "DB_PORT": "",
+        },
+    ),
+    mock.patch("sqlalchemy.create_engine"),
+):
     from judo_techniques_bot.bot import Bot, MentionedTechnique
 
     class Author:
@@ -36,7 +40,7 @@ with mock.patch.dict(
             # Load test data (deserialize)
             with open("tests/techniques_test_data.pickle", "rb") as handle:
                 techniques_data = pickle.load(handle)
-            self.bot = Bot(techniques_data)
+            self.bot = Bot(techniques_data, time_between_retry=0)
 
         def test_permutation_of_space_separated_words(self):
             expected = {
@@ -151,6 +155,40 @@ with mock.patch.dict(
             techniques = self.bot._get_mentioned_techniques_from_comment(comment)
 
             self.assertEqual(len(techniques), 0)
+
+        def test_normal_replying_to_comments(self):
+            comment = mock.MagicMock()
+
+            techniques_to_translate = []
+
+            self.bot._reply_to_comment(comment, techniques_to_translate)
+
+            self.assertEqual(comment.reply.call_count, 1)
+
+        def test_max_retry_for_replying_to_comments(self):
+            comment = mock.MagicMock()
+            comment.reply.side_effect = praw.exceptions.APIException(
+                ["test", "test", "test"]
+            )
+
+            techniques_to_translate = []
+
+            self.bot._reply_to_comment(comment, techniques_to_translate)
+
+            self.assertEqual(comment.reply.call_count, 4)
+
+        def test_non_retry_for_replying_to_comments(self):
+            comment = mock.MagicMock()
+            comment.reply.side_effect = [
+                praw.exceptions.APIException(["test", "test", "test"]),
+                None,
+            ]
+
+            techniques_to_translate = []
+
+            self.bot._reply_to_comment(comment, techniques_to_translate)
+
+            self.assertEqual(comment.reply.call_count, 2)
 
     if __name__ == "__main__":
         unittest.main()
