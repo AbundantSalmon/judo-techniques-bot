@@ -9,7 +9,7 @@ dependencies = [
     "alembic==1.16.5",
     "bump-my-version>=1.2.1",
     "praw==7.8.1",
-    "psycopg2==2.9.10",
+    "psycopg2==2.9.11",
     "sentry-sdk==2.41.0",
     "sqlalchemy==2.0.44",
 ]
