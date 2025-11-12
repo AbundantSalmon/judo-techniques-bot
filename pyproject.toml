@@ -17,7 +17,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "black==25.9.0",
-    "coverage[toml]==7.11.1",
+    "coverage[toml]==7.11.3",
     "isort==7.0.0",
 ]
 
