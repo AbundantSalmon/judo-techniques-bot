@@ -1,16 +1,17 @@
 """empty message
 
 Revision ID: 2eecb7a44adb
-Revises: 
+Revises:
 Create Date: 2021-07-31 22:49:57.162392
 
 """
-from alembic import op
-import sqlalchemy as sa
+
+from alembic import op  # noqa: F401
+import sqlalchemy as sa  # noqa: F401
 
 
 # revision identifiers, used by Alembic.
-revision = '2eecb7a44adb'
+revision = "2eecb7a44adb"
 down_revision = None
 branch_labels = None
 depends_on = None

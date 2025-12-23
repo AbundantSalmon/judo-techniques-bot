@@ -1,8 +1,8 @@
 import csv
 import os
 
-from db import session_scope
-from models import Technique
+from .db import session_scope
+from .models import Technique
 
 TECHNIQUES_DATA_FILE = "data/techniques_fixtures.csv"
 

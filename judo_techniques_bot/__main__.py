@@ -2,8 +2,8 @@ import logging
 import os
 from pathlib import Path
 
-import config
-import main
+import config  # ty:ignore[unresolved-import]
+import main  # ty:ignore[unresolved-import]
 import sentry_sdk
 from sqlalchemy.orm.session import close_all_sessions
 

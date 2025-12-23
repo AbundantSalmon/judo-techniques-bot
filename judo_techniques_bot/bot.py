@@ -4,7 +4,7 @@ from time import sleep
 from typing import List, Set
 
 import praw
-from config import (
+from .config import (
     CLIENT_ID,
     CLIENT_SECRET,
     REDDIT_PASSWORD,
@@ -13,8 +13,8 @@ from config import (
     USER_AGENT,
     VERSION,
 )
-from db import session_scope
-from models import DetectedJudoTechniqueMentionEvent
+from .db import session_scope
+from .models import DetectedJudoTechniqueMentionEvent
 
 logger = logging.getLogger(__name__)
 
@@ -252,7 +252,7 @@ class Bot:
                 )
                 text += tech_text
         text += (
-            f"\n\nAny missed names may have already been translated in my "
+            "\n\nAny missed names may have already been translated in my "
             + "previous comments in the post."
             + "\n\n______________________\n\n"
             + f"^(Judo Techniques Bot: v{VERSION}.)"
@@ -260,7 +260,7 @@ class Bot:
         )
         try:
             comment.reply(text)
-        except praw.exceptions.APIException as e:
+        except praw.exceptions.APIException as e:  # ty:ignore[possibly-missing-attribute]
             logger.exception(e)
             EXCEPTION_ERRORS = [
                 "DELETED_COMMENT",
@@ -282,7 +282,7 @@ class Bot:
                         logger.warning("Retrying")
                         comment.reply(text)
                         break
-                    except praw.exceptions.APIException as inner_e:
+                    except praw.exceptions.APIException as inner_e:  # ty:ignore[possibly-missing-attribute]
                         if inner_e.error_type in EXCEPTION_ERRORS:
                             logger.info(
                                 f"Comment that was being replied to was found to be {inner_e.error_type}, no reply made."
@@ -299,7 +299,7 @@ class Bot:
         """
         list_of_words = phrase.split(" ")
         if len(list_of_words) == 1:
-            return list_of_words
+            return set(list_of_words)
 
         set_of_phrases = set()
 

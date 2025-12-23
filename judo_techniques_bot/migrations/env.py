@@ -1,11 +1,11 @@
 from logging.config import fileConfig
 
 from alembic import context
-from config import DATABASE_URI
-from models import DetectedJudoTechniqueMentionEvent, Technique
+from ..config import DATABASE_URI
+from ..models import DetectedJudoTechniqueMentionEvent, Technique  # noqa: F401
 from sqlalchemy import engine_from_config, pool
 
-from db import Base
+from ..db import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -14,7 +14,7 @@ config = context.config
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.attributes.get("configure_logger", True):
-    fileConfig(config.config_file_name)
+    fileConfig(config.config_file_name)  # ty:ignore[invalid-argument-type]
 
 # Override alembic.ini with postsql connection from config
 config.set_main_option("sqlalchemy.url", DATABASE_URI)
@@ -66,14 +66,14 @@ def run_migrations_online():
 
     def process_revision_directives(context, revision, directives):
         # Prevent alembic from making empty migrations
-        if config.cmd_opts.autogenerate:
+        if config.cmd_opts.autogenerate:  # ty:ignore[possibly-missing-attribute]
             script = directives[0]
             if script.upgrade_ops.is_empty():
                 print("No changes detected, no migration generated")
                 directives[:] = []
 
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section),
+        config.get_section(config.config_ini_section),  # ty:ignore[invalid-argument-type]
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )

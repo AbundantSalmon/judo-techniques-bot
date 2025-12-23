@@ -1,8 +1,8 @@
 import logging
 from pathlib import Path
 
-from bot import Bot
-from models import Technique
+from .bot import Bot
+from .models import Technique
 from sqlalchemy.orm.session import close_all_sessions
 
 logger = logging.getLogger(__name__)

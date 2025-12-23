@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 
-from config import DATABASE_URI
+from .config import DATABASE_URI
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 

@@ -23,6 +23,14 @@ jobs:
 
       - name: Install the project
         run: uv sync --locked --all-extras --dev
+      
+      - name: Lint and format check
+        uses: astral-sh/ruff-action@v3
+      - run: ruff check
+      - run: ruff format --check
+
+      - name: Checktypes
+        run: uv run ty check
 
       - name: Run tests with unittest
         run: uv run -m unittest

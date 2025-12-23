@@ -1,4 +1,4 @@
-from db import Base, session_scope
+from .db import Base, session_scope
 from sqlalchemy import Column, Identity
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import relationship
