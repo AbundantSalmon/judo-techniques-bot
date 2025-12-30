@@ -1,5 +1,7 @@
 import logging
 from pathlib import Path
+from alembic import command
+from alembic.config import Config
 
 from .bot import Bot
 from .models import Technique
@@ -22,9 +24,6 @@ def main():
 
 
 def run_any_missing_migrations():
-    from alembic import command
-    from alembic.config import Config
-
     logger.info("Running migrations")
     alembic_cfg = Config(
         Path(__file__).parent / "alembic.ini",

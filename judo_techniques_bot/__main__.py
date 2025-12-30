@@ -2,8 +2,8 @@ import logging
 import os
 from pathlib import Path
 
-import config  # ty:ignore[unresolved-import]
-import main  # ty:ignore[unresolved-import]
+from judo_techniques_bot import config
+from judo_techniques_bot import main
 import sentry_sdk
 from sqlalchemy.orm.session import close_all_sessions
 
@@ -42,13 +42,12 @@ root_logger.handlers = [
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
-    while True:
-        try:
-            main.main()
-        except Exception as e:
-            logger.exception(e)
-            sentry_sdk.capture_exception(e)
-            logger.warning("Uncaught exception occurred while running, trying again.")
-        finally:
-            close_all_sessions()
-            logging.shutdown()
+    try:
+        main.main()
+    except Exception as e:
+        logger.exception(e)
+        sentry_sdk.capture_exception(e)
+        logger.warning("Uncaught exception occurred while running, trying again.")
+    finally:
+        close_all_sessions()
+        logging.shutdown()
