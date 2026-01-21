@@ -29,7 +29,7 @@ SUBREDDITS = os.environ["SUBREDDITS"]
 SENTRY_DSN = os.environ["SENTRY_DSN"]
 
 bump_toml = tomllib.load(open(".bumpversion.toml", "rb"))
-VERSION = bump_toml["tool"]["bumpversion"]["current_version"]
+VERSION = "jtb-" + bump_toml["tool"]["bumpversion"]["current_version"]
 
 DATABASE_URI = (
     f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
