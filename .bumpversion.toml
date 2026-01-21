@@ -1,5 +1,5 @@
 [tool.bumpversion]
-current_version = "0.7.59"
+current_version = "0.7.60"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 search = "{current_version}"
