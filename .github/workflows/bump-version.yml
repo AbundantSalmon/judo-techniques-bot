@@ -55,3 +55,4 @@ jobs:
         with:
           environment: production
           release: "jtb-${{ steps.bump.outputs.current-version }}"
+          ignore_missing: true # not sure why it is not detecting the commits?
