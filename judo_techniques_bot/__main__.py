@@ -16,6 +16,7 @@ sentry_sdk.init(
     environment=config.ENVIRONMENT,
     traces_sample_rate=1.0,
     enable_logs=True,
+    release=config.VERSION,
 )
 
 # Logging
