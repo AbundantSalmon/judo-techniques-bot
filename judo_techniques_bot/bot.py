@@ -256,7 +256,7 @@ class Bot:
             + "previous comments in the post."
             + "\n\n______________________\n\n"
             + f"^(Judo Techniques Bot: v{VERSION}.)"
-            " ^(See my) [^(code)](https://github.com/AbundantSalmon/judo-techniques-bot)\n\n"
+            " ^(See my) [^(code)](https://github.com/AbundantSalmon/judo-techniques-bot). ^(See my) [^(stats)](https://judo-techniques-bot-stats.vercel.app/)\n\n"
         )
         try:
             comment.reply(text)
