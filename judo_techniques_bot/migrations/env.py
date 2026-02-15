@@ -66,7 +66,7 @@ def run_migrations_online():
 
     def process_revision_directives(context, revision, directives):
         # Prevent alembic from making empty migrations
-        if config.cmd_opts.autogenerate:  # ty:ignore[possibly-missing-attribute]
+        if config.cmd_opts.autogenerate:  # ty:ignore[unresolved-attribute]
             script = directives[0]
             if script.upgrade_ops.is_empty():
                 print("No changes detected, no migration generated")
