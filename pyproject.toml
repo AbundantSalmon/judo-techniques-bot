@@ -11,7 +11,7 @@ dependencies = [
     "praw==7.8.1",
     "psycopg2==2.9.11",
     "sentry-sdk==2.53.0",
-    "sqlalchemy==2.0.46",
+    "sqlalchemy==2.0.47",
 ]
 
 [dependency-groups]
