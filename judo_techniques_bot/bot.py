@@ -260,7 +260,7 @@ class Bot:
         )
         try:
             comment.reply(text)
-        except praw.exceptions.APIException as e:  # ty:ignore[possibly-missing-attribute]
+        except praw.exceptions.APIException as e:  # ty:ignore[possibly-missing-submodule]
             logger.exception(e)
             EXCEPTION_ERRORS = [
                 "DELETED_COMMENT",
@@ -282,7 +282,7 @@ class Bot:
                         logger.warning("Retrying")
                         comment.reply(text)
                         break
-                    except praw.exceptions.APIException as inner_e:  # ty:ignore[possibly-missing-attribute]
+                    except praw.exceptions.APIException as inner_e:  # ty:ignore[possibly-missing-submodule]
                         if inner_e.error_type in EXCEPTION_ERRORS:
                             logger.info(
                                 f"Comment that was being replied to was found to be {inner_e.error_type}, no reply made."

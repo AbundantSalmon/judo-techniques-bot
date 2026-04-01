@@ -33,7 +33,7 @@ def downgrade():
     table_name = sa.sql.table("techniques", sa.Column("video_url", sa.VARCHAR()))
     op.execute(
         table_name.update()
-        .where(lambda: table_name.c.video_url is None)
+        .where(lambda: table_name.c.video_url is None)  # ty:ignore[invalid-argument-type]
         .values(video_url="")
     )
     op.alter_column(
