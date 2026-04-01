@@ -167,7 +167,7 @@ with (
 
         def test_max_retry_for_replying_to_comments(self):
             comment = mock.MagicMock()
-            comment.reply.side_effect = praw.exceptions.APIException(  # ty:ignore[possibly-missing-attribute]
+            comment.reply.side_effect = praw.exceptions.APIException(  # ty:ignore[possibly-missing-submodule]
                 ["test", "test", "test"]
             )
 
@@ -180,7 +180,7 @@ with (
         def test_non_retry_for_replying_to_comments(self):
             comment = mock.MagicMock()
             comment.reply.side_effect = [
-                praw.exceptions.APIException(["test", "test", "test"]),  # ty:ignore[possibly-missing-attribute]
+                praw.exceptions.APIException(["test", "test", "test"]),  # ty:ignore[possibly-missing-submodule]
                 None,
             ]
 
