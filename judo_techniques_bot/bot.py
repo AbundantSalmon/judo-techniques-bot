@@ -39,6 +39,9 @@ class Bot:
         self, data: dict[str, CachedTechniques], time_between_retry: int = 10 * 60
     ) -> None:
         self.data: dict[str, CachedTechniques] = data
+        self._technique_patterns: dict[str, re.Pattern] = {
+            name: self._build_technique_pattern(name.lower()) for name in data.keys()
+        }
         self.time_between_retry = time_between_retry
 
     def run(self):
@@ -122,7 +125,7 @@ class Bot:
         comment_body_lower_case = comment.body.lower()
         for japanese_name in self.data.keys():
             technique_id = self.data[japanese_name]["id"]
-            pattern = self._build_technique_pattern(japanese_name.lower())
+            pattern = self._technique_patterns[japanese_name]
             for match in pattern.finditer(comment_body_lower_case):
                 mentioned_techniques.append(
                     MentionedTechnique(
