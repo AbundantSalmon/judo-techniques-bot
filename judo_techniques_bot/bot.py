@@ -304,7 +304,7 @@ class Bot:
         set_of_phrases = set()
 
         for index, word in enumerate(list_of_words):
-            if index is not len(list_of_words) - 1:
+            if index != len(list_of_words) - 1:
                 new_phrase = (
                     " ".join(list_of_words[:index])
                     + " "

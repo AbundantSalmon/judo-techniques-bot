@@ -65,5 +65,5 @@ class DetectedJudoTechniqueMentionEvent(Base):
     # human readable representation
     def __repr__(self):
         return "<DetectedJudoTechniqueMentionEvent(datetime='{}', technique='{}', author={}, translated={})>".format(
-            self.datetime, self.technique, self.author, self.translated
+            self.created_at, self.technique_id, self.author, self.translated
         )
