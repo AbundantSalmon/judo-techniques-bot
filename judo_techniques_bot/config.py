@@ -28,7 +28,8 @@ SUBREDDITS = os.environ["SUBREDDITS"]
 
 SENTRY_DSN = os.environ["SENTRY_DSN"]
 
-bump_toml = tomllib.load(open(".bumpversion.toml", "rb"))
+with open(".bumpversion.toml", "rb") as f:
+    bump_toml = tomllib.load(f)
 VERSION = "jtb-" + bump_toml["tool"]["bumpversion"]["current_version"]
 
 DATABASE_URI = (
