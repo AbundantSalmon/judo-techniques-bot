@@ -151,6 +151,103 @@ with (
             self.assertEqual(techniques[2].will_be_posted, False)
             self.assertEqual(techniques[3].will_be_posted, False)
 
+        def _make_comment_with_submission(self, existing_comments):
+            """Helper to create a mock comment whose submission contains existing_comments."""
+            comment = mock.MagicMock()
+            comment.submission.comments.replace_more = mock.MagicMock()
+            comment.submission.comments.list.return_value = existing_comments
+            return comment
+
+        def test_set_no_post_previously_translated_blocks_already_translated(self):
+            bot_comment = mock.MagicMock()
+            bot_comment.author.name = ""  # matches REDDIT_USERNAME in test env
+            bot_comment.body = "Uchi Mata translation"
+
+            comment = self._make_comment_with_submission([bot_comment])
+
+            techniques = [
+                MentionedTechnique(
+                    1,
+                    "Uchi Mata",
+                    ["Inner Thigh Throw"],
+                    "url",
+                    "url",
+                    "author",
+                    "uchi mata",
+                ),
+            ]
+
+            result = self.bot._set_no_post_previously_translated(comment, techniques)
+
+            self.assertFalse(result[0].will_be_posted)
+
+        def test_set_no_post_previously_translated_allows_new_technique(self):
+            bot_comment = mock.MagicMock()
+            bot_comment.author.name = ""  # matches REDDIT_USERNAME
+            bot_comment.body = "Uchi Mata translation"
+
+            comment = self._make_comment_with_submission([bot_comment])
+
+            techniques = [
+                MentionedTechnique(
+                    2,
+                    "Seoi Nage",
+                    ["Shoulder Throw"],
+                    "url",
+                    "url",
+                    "author",
+                    "seoi nage",
+                ),
+            ]
+
+            result = self.bot._set_no_post_previously_translated(comment, techniques)
+
+            self.assertTrue(result[0].will_be_posted)
+
+        def test_set_no_post_previously_translated_no_bot_comments(self):
+            user_comment = mock.MagicMock()
+            user_comment.author.name = "some_user"
+            user_comment.body = "Uchi Mata is cool"
+
+            comment = self._make_comment_with_submission([user_comment])
+
+            techniques = [
+                MentionedTechnique(
+                    1,
+                    "Uchi Mata",
+                    ["Inner Thigh Throw"],
+                    "url",
+                    "url",
+                    "author",
+                    "uchi mata",
+                ),
+            ]
+
+            result = self.bot._set_no_post_previously_translated(comment, techniques)
+
+            self.assertTrue(result[0].will_be_posted)
+
+        def test_set_no_post_previously_translated_skips_already_flagged(self):
+            """Techniques already flagged will_be_posted=False should not trigger API fetch."""
+            comment = mock.MagicMock()
+
+            technique = MentionedTechnique(
+                1,
+                "Uchi Mata",
+                ["Inner Thigh Throw"],
+                "url",
+                "url",
+                "author",
+                "uchi mata",
+            )
+            technique.will_be_posted = False
+
+            result = self.bot._set_no_post_previously_translated(comment, [technique])
+
+            self.assertFalse(result[0].will_be_posted)
+            # submission.comments should never be accessed
+            comment.submission.comments.replace_more.assert_not_called()
+
         def test_get_no_mentioned_techniques_from_comment(self):
             comment = FakeComment(
                 "I punched that guy last week, but that was only after he kicked me"

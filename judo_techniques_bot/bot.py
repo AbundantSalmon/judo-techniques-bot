@@ -183,17 +183,22 @@ class Bot:
         This function will check to see whether the techniques have been
         previously translated and prevent further translations
         """
+        cached_comment_bodies = None
         for mentioned_technique in mentioned_techniques:
             if mentioned_technique.will_be_posted is not False:
-                parent_submission = comment.submission.comments
-                parent_submission.replace_more(limit=None)
-                for comment in parent_submission.list():
-                    if (
-                        comment.author is not None
-                        and comment.author.name == REDDIT_USERNAME
-                        and mentioned_technique.technique in comment.body
-                    ):
+                if cached_comment_bodies is None:
+                    # cache the comment bodies of the post
+                    parent_submission = comment.submission.comments
+                    parent_submission.replace_more(limit=None)
+                    cached_comment_bodies = [
+                        c.body
+                        for c in parent_submission.list()
+                        if c.author is not None and c.author.name == REDDIT_USERNAME
+                    ]
+                for body in cached_comment_bodies:
+                    if mentioned_technique.technique in body:
                         mentioned_technique.will_be_posted = False
+                        break
         return mentioned_techniques
 
     def _save_records(self, mentioned_techniques: List[MentionedTechnique]):
