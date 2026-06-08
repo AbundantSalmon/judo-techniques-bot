@@ -143,10 +143,10 @@ class Bot:
         """
         Set flag `will_be_posted` for all duplicated techniques to False
         """
-        techniques = []
+        techniques = set()
         for mentioned_technique in mentioned_techniques:
             if mentioned_technique.technique not in techniques:
-                techniques.append(mentioned_technique.technique)
+                techniques.add(mentioned_technique.technique)
             else:
                 mentioned_technique.will_be_posted = False
         return mentioned_techniques

@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 def retrieve_fixture_data():
-    logging.info("Retrieving technique data from:")
-    logging.info(file_location)
+    logger.info("Retrieving technique data from:")
+    logger.info(file_location)
 
     array_of_techniques: list[Technique] = []
     with session_scope() as s:
@@ -31,7 +31,7 @@ def retrieve_fixture_data():
                 )
         s.bulk_save_objects(array_of_techniques)
 
-    logging.info(f"{len(array_of_techniques)} technique(s) data loaded!")
+    logger.info(f"{len(array_of_techniques)} technique(s) data loaded!")
 
     return array_of_techniques
 
