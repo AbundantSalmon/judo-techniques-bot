@@ -2,7 +2,6 @@ import dataclasses
 import logging
 import re
 from time import sleep
-from typing import List
 
 import praw
 from .config import (
@@ -110,7 +109,7 @@ class Bot:
 
     def _get_mentioned_techniques_from_comment(
         self, comment
-    ) -> List[MentionedTechnique]:
+    ) -> list[MentionedTechnique]:
         """
         Determines whether the supplied comment has a judo technique,
         returns with a list of the ids of any found judo techniques.
@@ -140,7 +139,7 @@ class Bot:
                 )
         return mentioned_techniques
 
-    def _set_no_post_duplicates(self, mentioned_techniques: List[MentionedTechnique]):
+    def _set_no_post_duplicates(self, mentioned_techniques: list[MentionedTechnique]):
         """
         Set flag `will_be_posted` for all duplicated techniques to False
         """
@@ -155,7 +154,7 @@ class Bot:
     def _set_no_post_previously_translated(
         self,
         comment,
-        mentioned_techniques: List[MentionedTechnique],
+        mentioned_techniques: list[MentionedTechnique],
     ):
         """
         This function will check to see whether the techniques have been
@@ -179,7 +178,7 @@ class Bot:
                         break
         return mentioned_techniques
 
-    def _save_records(self, mentioned_techniques: List[MentionedTechnique]):
+    def _save_records(self, mentioned_techniques: list[MentionedTechnique]):
         """
         Save DetectedJudoTechniqueMentionEvent to the DB
         """
@@ -195,13 +194,13 @@ class Bot:
                     )
                 )
 
-    def _filter_for_translations(self, mentioned_techniques: List[MentionedTechnique]):
+    def _filter_for_translations(self, mentioned_techniques: list[MentionedTechnique]):
         return [
             technique for technique in mentioned_techniques if technique.will_be_posted
         ]
 
     def _reply_to_comment(
-        self, comment, techniques_to_translate: List[MentionedTechnique]
+        self, comment, techniques_to_translate: list[MentionedTechnique]
     ):
         # code to reply to comment here, need to figureout what argument are req
         text = (
