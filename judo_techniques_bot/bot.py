@@ -1,3 +1,4 @@
+import dataclasses
 import logging
 from itertools import product
 from time import sleep
@@ -14,43 +15,30 @@ from .config import (
     VERSION,
 )
 from .db import session_scope
-from .models import DetectedJudoTechniqueMentionEvent
+from .models import DetectedJudoTechniqueMentionEvent, CachedTechniques
 
 logger = logging.getLogger(__name__)
 
 
+@dataclasses.dataclass
 class MentionedTechnique:
-    """
-    Data class struct
-    """
-
-    def __init__(
-        self,
-        technique_id,
-        technique,
-        english_names,
-        youtube_link,
-        comment_url,
-        author,
-        technique_name_variant=None,
-    ):
-        self.technique = technique
-        self.technique_id = technique_id
-        self.technique_name_variant = (
-            technique if technique_name_variant is None else technique_name_variant
-        )
-        self.english_names = english_names
-        self.youtube_link = youtube_link
-        self.comment_url = comment_url
-        self.author = author
-        self.will_be_posted = True
+    technique_id: int
+    technique: str
+    english_names: list[str]
+    youtube_link: str
+    comment_url: str
+    author: str
+    technique_name_variant: str
+    will_be_posted: bool = True
 
 
 class Bot:
     MAX_RETRIES = 3
 
-    def __init__(self, data, time_between_retry: int = 10 * 60) -> None:
-        self.data = data
+    def __init__(
+        self, data: dict[str, CachedTechniques], time_between_retry: int = 10 * 60
+    ) -> None:
+        self.data: dict[str, CachedTechniques] = data
         self.time_between_retry = time_between_retry
 
     def run(self):

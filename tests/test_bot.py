@@ -107,36 +107,40 @@ with (
         def test_set_no_post_duplicates(self):
             test_values = [
                 MentionedTechnique(
-                    "1",
+                    1,
                     "throw",
-                    "english_names",
+                    ["english_names"],
                     "youtube_link",
                     "comment_url",
                     "author",
+                    "technique_name_variant",
                 ),
                 MentionedTechnique(
-                    "2",
+                    2,
                     "throw_2",
-                    "english_names",
+                    ["english_names"],
                     "youtube_link",
                     "comment_url",
                     "author",
+                    "technique_name_variant",
                 ),
                 MentionedTechnique(
-                    "1",
+                    1,
                     "throw",
-                    "english_names",
+                    ["english_names"],
                     "youtube_link",
                     "comment_url",
                     "author",
+                    "technique_name_variant",
                 ),
                 MentionedTechnique(
-                    "1",
+                    1,
                     "throw",
-                    "english_names",
+                    ["english_names"],
                     "youtube_link",
                     "comment_url",
                     "author",
+                    "technique_name_variant",
                 ),
             ]
 
