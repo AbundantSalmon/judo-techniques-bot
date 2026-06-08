@@ -34,14 +34,14 @@ With local development db:
 
 ```bash
 # Startup docker with database, bot and adminer
-docker-compose up
+docker compose up
 
 # Load fixture data into the db
-uv run judo_techniques_bot/load_data.py
+uv run -m judo_techniques_bot.load_data
 
 or
 
-docker exec --env-file .env judo_techniques_bot uv run judo_techniques_bot/load_data.py
+docker exec --env-file .env judo_techniques_bot uv run -m judo_techniques_bot.load_data
 ```
 
 ### Tests
