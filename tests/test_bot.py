@@ -42,41 +42,19 @@ with (
                 techniques_data = pickle.load(handle)
             self.bot = Bot(techniques_data, time_between_retry=0)
 
-        def test_permutation_of_space_separated_words(self):
-            expected = {
-                "A BC D",
-                "A BCD",
-                "ABCD",
-                "AB C D",
-                "A B CD",
-                "ABC D",
-                "A B C D",
-                "AB CD",
-            }
-            result = self.bot._generate_permutations_of_space_separated_words("A B C D")
-            self.assertCountEqual(result, expected)
+        def test_build_technique_pattern_matches_all_variants(self):
+            pattern = Bot._build_technique_pattern("o uchi gari")
+            self.assertIsNotNone(pattern.search("o uchi gari"))
+            self.assertIsNotNone(pattern.search("o-uchi-gari"))
+            self.assertIsNotNone(pattern.search("ouchigari"))
+            self.assertIsNotNone(pattern.search("o-uchi gari"))
+            self.assertIsNotNone(pattern.search("o uchi-gari"))
+            self.assertIsNone(pattern.search("o  uchi gari"))
 
-        def test_generate_permutations_of_hyphen_variation(self):
-            expected = {
-                "A-B C D",
-                "A B-C D",
-                "A B C-D",
-                "A-B-C D",
-                "A-B C-D",
-                "A B-C-D",
-                "A-B-C-D",
-            }
-            result = self.bot._generate_permutations_of_hyphen_variation("A B C D")
-            self.assertCountEqual(result, expected)
-
-        def test_find_all(self):
-            expected = [0, 15, 31]
-            result = list(
-                self.bot._find_all(
-                    "hello my baby, hello my honey, hello my old time gal", "hello"
-                )
-            )
-            self.assertCountEqual(result, expected)
+        def test_build_technique_pattern_single_word(self):
+            pattern = Bot._build_technique_pattern("judo")
+            self.assertIsNotNone(pattern.search("judo"))
+            self.assertIsNone(pattern.search("karate"))
 
         def test_get_mentioned_techniques_from_comment(self):
             comment = FakeComment(

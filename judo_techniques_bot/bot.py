@@ -1,8 +1,8 @@
 import dataclasses
 import logging
-from itertools import product
+import re
 from time import sleep
-from typing import List, Set
+from typing import List
 
 import praw
 from .config import (
@@ -119,47 +119,22 @@ class Bot:
         if original_author == REDDIT_USERNAME:
             # Do not process if the bot has read it's own comment
             return mentioned_techniques
+        comment_body_lower_case = comment.body.lower()
         for japanese_name in self.data.keys():
-            japanese_name_lower_case = japanese_name.lower()
-            comment_body_lower_case = comment.body.lower()
             technique_id = self.data[japanese_name]["id"]
-            set_of_combinations = self._generate_permutations_of_space_separated_words(
-                japanese_name_lower_case
-            )
-
-            # TODO: Would it be better to generate and hold list of all combinations in memory?
-            for phrase in set_of_combinations:
-                indices_of_mentions = list(
-                    self._find_all(comment_body_lower_case, phrase)
-                )
-                for _ in indices_of_mentions:  # TODO: replace with regex
-                    technique = MentionedTechnique(
+            pattern = self._build_technique_pattern(japanese_name.lower())
+            for match in pattern.finditer(comment_body_lower_case):
+                mentioned_techniques.append(
+                    MentionedTechnique(
                         technique_id,
                         japanese_name,
                         self.data[japanese_name]["english_names"],
                         self.data[japanese_name]["video_url"],
                         comment.permalink,
                         original_author,
-                        technique_name_variant=phrase,
+                        technique_name_variant=match.group(),
                     )
-                    mentioned_techniques.append(technique)
-                for (
-                    hyphenated_phrase
-                ) in self._generate_permutations_of_hyphen_variation(phrase):
-                    indices_of_hyphen_mentions = list(
-                        self._find_all(comment_body_lower_case, hyphenated_phrase)
-                    )
-                    for _ in indices_of_hyphen_mentions:  # TODO: replace with regex
-                        technique = MentionedTechnique(
-                            technique_id,
-                            japanese_name,
-                            self.data[japanese_name]["english_names"],
-                            self.data[japanese_name]["video_url"],
-                            comment.permalink,
-                            original_author,
-                            technique_name_variant=hyphenated_phrase,
-                        )
-                        mentioned_techniques.append(technique)
+                )
         return mentioned_techniques
 
     def _set_no_post_duplicates(self, mentioned_techniques: List[MentionedTechnique]):
@@ -284,65 +259,13 @@ class Bot:
 
         logger.info("Replied!\n_____________________")
 
-    def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
+    @staticmethod
+    def _build_technique_pattern(japanese_name_lower: str) -> re.Pattern:
         """
-        Set of permutations of all the possible permutations of space removal
-        e.g. O uchi gari -> Ouchigari, O uchigari, Ouchi gari
-        Works recursively
+        Build a regex that matches all space/hyphen/concatenated variants of a technique name.
+        e.g. "o uchi gari" -> r"o[ \\-]?uchi[ \\-]?gari"
+        Matches: "o uchi gari", "o-uchi-gari", "ouchigari", "o-uchi gari", etc.
         """
-        list_of_words = phrase.split(" ")
-        if len(list_of_words) == 1:
-            return set(list_of_words)
-
-        set_of_phrases = set()
-
-        for index, word in enumerate(list_of_words):
-            if index != len(list_of_words) - 1:
-                new_phrase = (
-                    " ".join(list_of_words[:index])
-                    + " "
-                    + word
-                    + list_of_words[index + 1]
-                    + " "
-                    + " ".join(list_of_words[index + 2 :])
-                ).strip()
-                set_of_phrases.update(
-                    self._generate_permutations_of_space_separated_words(new_phrase)
-                )
-
-        set_of_phrases.update([phrase])
-        return set_of_phrases
-
-    def _generate_permutations_of_hyphen_variation(self, phrase: str) -> Set[str]:
-        """
-        Returns a set of all permutations of when a ' ' is replaced by a '-'
-        e.g. O uchi gari -> O-uchi gari, O uchi-gari O-uchi-gari
-        A B C D -> A-B C D, A B-C D, A B C-D, A-B-C D, A-B C-D, A B-C-D, A-B-C-D
-        """
-        number_of_spaces = phrase.count(" ")
-        index_of_all_spaces = list(self._find_all(phrase, " "))
-        set_of_all_hyphen_variations = set()
-        for x in product(range(2), repeat=number_of_spaces):
-            hyphenated_phrase = phrase
-            for count, change_to_hyphen in enumerate(x):
-                if change_to_hyphen == 1:
-                    list_of_characters = list(hyphenated_phrase)
-                    list_of_characters[index_of_all_spaces[count]] = "-"
-                    hyphenated_phrase = "".join(list_of_characters)
-            set_of_all_hyphen_variations.add(hyphenated_phrase)
-        set_of_all_hyphen_variations.discard(phrase)  # remove original phrase
-        return set_of_all_hyphen_variations
-
-    def _find_all(self, string, substring):
-        """
-        Generator of indices to all the starting index of a substring in the string
-        """
-        start_index = 0
-        while True:
-            start_index = string.find(substring, start_index)
-            if start_index == -1:
-                return
-            yield start_index
-            start_index += len(
-                substring
-            )  # can use start += 1 to find overlapping matches
+        words = japanese_name_lower.split(" ")
+        pattern = "[ \\-]?".join(re.escape(word) for word in words)
+        return re.compile(pattern)
