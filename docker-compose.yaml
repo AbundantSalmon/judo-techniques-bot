@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   judo_techniques_bot:
     container_name: judo_techniques_bot
@@ -31,7 +30,7 @@ services:
       - postgres
 
   postgres:
-    image: postgres:12
+    image: postgres:17
     restart: always
     environment:
       POSTGRES_DB: ${DB_NAME}

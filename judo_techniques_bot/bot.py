@@ -1,7 +1,7 @@
+import dataclasses
 import logging
-from itertools import product
+import re
 from time import sleep
-from typing import List, Set
 
 import praw
 from .config import (
@@ -14,43 +14,33 @@ from .config import (
     VERSION,
 )
 from .db import session_scope
-from .models import DetectedJudoTechniqueMentionEvent
+from .models import DetectedJudoTechniqueMentionEvent, CachedTechniques
 
 logger = logging.getLogger(__name__)
 
 
+@dataclasses.dataclass
 class MentionedTechnique:
-    """
-    Data class struct
-    """
-
-    def __init__(
-        self,
-        technique_id,
-        technique,
-        english_names,
-        youtube_link,
-        comment_url,
-        author,
-        technique_name_variant=None,
-    ):
-        self.technique = technique
-        self.technique_id = technique_id
-        self.technique_name_variant = (
-            technique if technique_name_variant is None else technique_name_variant
-        )
-        self.english_names = english_names
-        self.youtube_link = youtube_link
-        self.comment_url = comment_url
-        self.author = author
-        self.will_be_posted = True
+    technique_id: int
+    technique: str
+    english_names: list[str]
+    youtube_link: str
+    comment_url: str
+    author: str
+    technique_name_variant: str
+    will_be_posted: bool = True
 
 
 class Bot:
     MAX_RETRIES = 3
 
-    def __init__(self, data, time_between_retry: int = 10 * 60) -> None:
-        self.data = data
+    def __init__(
+        self, data: dict[str, CachedTechniques], time_between_retry: int = 10 * 60
+    ) -> None:
+        self.data: dict[str, CachedTechniques] = data
+        self._technique_patterns: dict[str, re.Pattern] = {
+            name: self._build_technique_pattern(name.lower()) for name in data.keys()
+        }
         self.time_between_retry = time_between_retry
 
     def run(self):
@@ -119,7 +109,7 @@ class Bot:
 
     def _get_mentioned_techniques_from_comment(
         self, comment
-    ) -> List[MentionedTechnique]:
+    ) -> list[MentionedTechnique]:
         """
         Determines whether the supplied comment has a judo technique,
         returns with a list of the ids of any found judo techniques.
@@ -131,57 +121,32 @@ class Bot:
         if original_author == REDDIT_USERNAME:
             # Do not process if the bot has read it's own comment
             return mentioned_techniques
+        comment_body_lower_case = comment.body.lower()
         for japanese_name in self.data.keys():
-            japanese_name_lower_case = japanese_name.lower()
-            comment_body_lower_case = comment.body.lower()
             technique_id = self.data[japanese_name]["id"]
-            set_of_combinations = self._generate_permutations_of_space_separated_words(
-                japanese_name_lower_case
-            )
-
-            # TODO: Would it be better to generate and hold list of all combinations in memory?
-            for phrase in set_of_combinations:
-                indices_of_mentions = list(
-                    self._find_all(comment_body_lower_case, phrase)
-                )
-                for _ in indices_of_mentions:  # TODO: replace with regex
-                    technique = MentionedTechnique(
+            pattern = self._technique_patterns[japanese_name]
+            for match in pattern.finditer(comment_body_lower_case):
+                mentioned_techniques.append(
+                    MentionedTechnique(
                         technique_id,
                         japanese_name,
                         self.data[japanese_name]["english_names"],
                         self.data[japanese_name]["video_url"],
                         comment.permalink,
                         original_author,
-                        technique_name_variant=phrase,
+                        technique_name_variant=match.group(),
                     )
-                    mentioned_techniques.append(technique)
-                for (
-                    hyphenated_phrase
-                ) in self._generate_permutations_of_hyphen_variation(phrase):
-                    indices_of_hyphen_mentions = list(
-                        self._find_all(comment_body_lower_case, hyphenated_phrase)
-                    )
-                    for _ in indices_of_hyphen_mentions:  # TODO: replace with regex
-                        technique = MentionedTechnique(
-                            technique_id,
-                            japanese_name,
-                            self.data[japanese_name]["english_names"],
-                            self.data[japanese_name]["video_url"],
-                            comment.permalink,
-                            original_author,
-                            technique_name_variant=hyphenated_phrase,
-                        )
-                        mentioned_techniques.append(technique)
+                )
         return mentioned_techniques
 
-    def _set_no_post_duplicates(self, mentioned_techniques: List[MentionedTechnique]):
+    def _set_no_post_duplicates(self, mentioned_techniques: list[MentionedTechnique]):
         """
         Set flag `will_be_posted` for all duplicated techniques to False
         """
-        techniques = []
+        techniques = set()
         for mentioned_technique in mentioned_techniques:
             if mentioned_technique.technique not in techniques:
-                techniques.append(mentioned_technique.technique)
+                techniques.add(mentioned_technique.technique)
             else:
                 mentioned_technique.will_be_posted = False
         return mentioned_techniques
@@ -189,26 +154,31 @@ class Bot:
     def _set_no_post_previously_translated(
         self,
         comment,
-        mentioned_techniques: List[MentionedTechnique],
+        mentioned_techniques: list[MentionedTechnique],
     ):
         """
         This function will check to see whether the techniques have been
         previously translated and prevent further translations
         """
+        cached_comment_bodies = None
         for mentioned_technique in mentioned_techniques:
             if mentioned_technique.will_be_posted is not False:
-                parent_submission = comment.submission.comments
-                parent_submission.replace_more(limit=None)
-                for comment in parent_submission.list():
-                    if (
-                        comment.author is not None
-                        and comment.author.name == REDDIT_USERNAME
-                        and mentioned_technique.technique in comment.body
-                    ):
+                if cached_comment_bodies is None:
+                    # cache the comment bodies of the post
+                    parent_submission = comment.submission.comments
+                    parent_submission.replace_more(limit=None)
+                    cached_comment_bodies = [
+                        c.body
+                        for c in parent_submission.list()
+                        if c.author is not None and c.author.name == REDDIT_USERNAME
+                    ]
+                for body in cached_comment_bodies:
+                    if mentioned_technique.technique in body:
                         mentioned_technique.will_be_posted = False
+                        break
         return mentioned_techniques
 
-    def _save_records(self, mentioned_techniques: List[MentionedTechnique]):
+    def _save_records(self, mentioned_techniques: list[MentionedTechnique]):
         """
         Save DetectedJudoTechniqueMentionEvent to the DB
         """
@@ -224,13 +194,13 @@ class Bot:
                     )
                 )
 
-    def _filter_for_translations(self, mentioned_techniques: List[MentionedTechnique]):
+    def _filter_for_translations(self, mentioned_techniques: list[MentionedTechnique]):
         return [
             technique for technique in mentioned_techniques if technique.will_be_posted
         ]
 
     def _reply_to_comment(
-        self, comment, techniques_to_translate: List[MentionedTechnique]
+        self, comment, techniques_to_translate: list[MentionedTechnique]
     ):
         # code to reply to comment here, need to figureout what argument are req
         text = (
@@ -291,65 +261,13 @@ class Bot:
 
         logger.info("Replied!\n_____________________")
 
-    def _generate_permutations_of_space_separated_words(self, phrase: str) -> Set[str]:
+    @staticmethod
+    def _build_technique_pattern(japanese_name_lower: str) -> re.Pattern:
         """
-        Set of permutations of all the possible permutations of space removal
-        e.g. O uchi gari -> Ouchigari, O uchigari, Ouchi gari
-        Works recursively
+        Build a regex that matches all space/hyphen/concatenated variants of a technique name.
+        e.g. "o uchi gari" -> r"o[ \\-]?uchi[ \\-]?gari"
+        Matches: "o uchi gari", "o-uchi-gari", "ouchigari", "o-uchi gari", etc.
         """
-        list_of_words = phrase.split(" ")
-        if len(list_of_words) == 1:
-            return set(list_of_words)
-
-        set_of_phrases = set()
-
-        for index, word in enumerate(list_of_words):
-            if index is not len(list_of_words) - 1:
-                new_phrase = (
-                    " ".join(list_of_words[:index])
-                    + " "
-                    + word
-                    + list_of_words[index + 1]
-                    + " "
-                    + " ".join(list_of_words[index + 2 :])
-                ).strip()
-                set_of_phrases.update(
-                    self._generate_permutations_of_space_separated_words(new_phrase)
-                )
-
-        set_of_phrases.update([phrase])
-        return set_of_phrases
-
-    def _generate_permutations_of_hyphen_variation(self, phrase: str) -> Set[str]:
-        """
-        Returns a set of all permutations of when a ' ' is replaced by a '-'
-        e.g. O uchi gari -> O-uchi gari, O uchi-gari O-uchi-gari
-        A B C D -> A-B C D, A B-C D, A B C-D, A-B-C D, A-B C-D, A B-C-D, A-B-C-D
-        """
-        number_of_spaces = phrase.count(" ")
-        index_of_all_spaces = list(self._find_all(phrase, " "))
-        set_of_all_hyphen_variations = set()
-        for x in product(range(2), repeat=number_of_spaces):
-            hyphenated_phrase = phrase
-            for count, change_to_hyphen in enumerate(x):
-                if change_to_hyphen == 1:
-                    list_of_characters = list(hyphenated_phrase)
-                    list_of_characters[index_of_all_spaces[count]] = "-"
-                    hyphenated_phrase = "".join(list_of_characters)
-            set_of_all_hyphen_variations.add(hyphenated_phrase)
-        set_of_all_hyphen_variations.discard(phrase)  # remove original phrase
-        return set_of_all_hyphen_variations
-
-    def _find_all(self, string, substring):
-        """
-        Generator of indices to all the starting index of a substring in the string
-        """
-        start_index = 0
-        while True:
-            start_index = string.find(substring, start_index)
-            if start_index == -1:
-                return
-            yield start_index
-            start_index += len(
-                substring
-            )  # can use start += 1 to find overlapping matches
+        words = japanese_name_lower.split(" ")
+        pattern = "[ \\-]?".join(re.escape(word) for word in words)
+        return re.compile(pattern)

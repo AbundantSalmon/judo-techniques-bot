@@ -2,7 +2,7 @@ from contextlib import contextmanager
 
 from .config import DATABASE_URI
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
 """
 Adapted from https://www.learndatasci.com/tutorials/using-databases-python-postgres-sqlalchemy-and-alembic/
@@ -13,8 +13,10 @@ engine = create_engine(DATABASE_URI, future=True)
 # Global session
 Session = sessionmaker(bind=engine, future=True)
 
+
 # Declarative base to be used with all models
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 
 @contextmanager
