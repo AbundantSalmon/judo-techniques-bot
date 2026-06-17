@@ -4,6 +4,7 @@ import re
 from time import sleep
 
 import praw
+from praw.exceptions import RedditAPIException
 from .config import (
     CLIENT_ID,
     CLIENT_SECRET,
@@ -230,32 +231,35 @@ class Bot:
         )
         try:
             comment.reply(text)
-        except praw.exceptions.APIException as e:  # ty:ignore[possibly-missing-submodule]
+        except RedditAPIException as e:
             logger.exception(e)
             EXCEPTION_ERRORS = [
                 "DELETED_COMMENT",
                 "COMMENT_UNREPLIABLE",
                 "SOMETHING_IS_BROKEN",
             ]
-            if e.error_type in EXCEPTION_ERRORS:
-                logger.info(
-                    f"Comment that was being replied to was found to be {e.error_type}, no reply made."
-                )
-            else:
-                for _ in range(self.MAX_RETRIES):
-                    try:
-                        logger.exception(
-                            e
-                        )  # Capture exception to understand what is happening
-                        logger.warning("Sleeping 10 min, then retry")
-                        sleep(self.time_between_retry)
-                        logger.warning("Retrying")
-                        comment.reply(text)
-                        break
-                    except praw.exceptions.APIException as inner_e:  # ty:ignore[possibly-missing-submodule]
-                        if inner_e.error_type in EXCEPTION_ERRORS:
+            for subexception in e.items:
+                if subexception.error_type in EXCEPTION_ERRORS:
+                    logger.info(
+                        f"Comment that was being replied to was found to be {subexception.error_type}, no reply made."
+                    )
+                    break
+
+            for _ in range(self.MAX_RETRIES):
+                try:
+                    logger.exception(
+                        e
+                    )  # Capture exception to understand what is happening
+                    logger.warning("Sleeping 10 min, then retry")
+                    sleep(self.time_between_retry)
+                    logger.warning("Retrying")
+                    comment.reply(text)
+                    break
+                except RedditAPIException as inner_e:
+                    for inner_subexception in inner_e.items:
+                        if inner_subexception.error_type in EXCEPTION_ERRORS:
                             logger.info(
-                                f"Comment that was being replied to was found to be {inner_e.error_type}, no reply made."
+                                f"Comment that was being replied to was found to be {inner_subexception.error_type}, no reply made."
                             )
                             break
 
