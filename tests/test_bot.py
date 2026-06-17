@@ -1,6 +1,5 @@
 from praw.exceptions import RedditAPIException
 import pickle
-import praw
 import unittest
 from unittest import mock
 
