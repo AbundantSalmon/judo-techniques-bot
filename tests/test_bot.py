@@ -1,3 +1,4 @@
+from praw.exceptions import RedditAPIException
 import pickle
 import praw
 import unittest
@@ -246,9 +247,7 @@ with (
 
         def test_max_retry_for_replying_to_comments(self):
             comment = mock.MagicMock()
-            comment.reply.side_effect = praw.exceptions.APIException(  # ty:ignore[possibly-missing-submodule]
-                ["test", "test", "test"]
-            )
+            comment.reply.side_effect = RedditAPIException(["test", "test", "test"])
 
             techniques_to_translate = []
 
@@ -259,7 +258,7 @@ with (
         def test_non_retry_for_replying_to_comments(self):
             comment = mock.MagicMock()
             comment.reply.side_effect = [
-                praw.exceptions.APIException(["test", "test", "test"]),  # ty:ignore[possibly-missing-submodule]
+                RedditAPIException(["test", "test", "test"]),
                 None,
             ]
 
