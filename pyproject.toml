@@ -7,7 +7,7 @@ requires-python = ">=3.13"
 
 dependencies = [
     "alembic==1.18.4",
-    "bump-my-version>=1.4.0",
+    "bump-my-version>=1.4.1",
     "praw==8.0.1",
     "psycopg2==2.9.12",
     "sentry-sdk==2.63.0",
