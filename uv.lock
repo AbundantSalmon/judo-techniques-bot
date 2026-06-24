@@ -297,7 +297,7 @@ dev = [
 requires-dist = [
     { name = "alembic", specifier = "==1.18.4" },
     { name = "bump-my-version", specifier = ">=1.4.1" },
-    { name = "praw", specifier = "==8.0.1" },
+    { name = "praw", specifier = "==8.0.2" },
     { name = "psycopg2", specifier = "==2.9.12" },
     { name = "sentry-sdk", specifier = "==2.63.0" },
     { name = "sqlalchemy", specifier = "==2.0.51" },
@@ -374,7 +374,7 @@ wheels = [
 
 [[package]]
 name = "praw"
-version = "8.0.1"
+version = "8.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "defusedxml" },
@@ -382,9 +382,9 @@ dependencies = [
     { name = "update-checker" },
     { name = "websocket-client" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/00/25/9b14c875501a40b4bfce7f3f3a07624b78556308356550f0f6594e826a72/praw-8.0.1.tar.gz", hash = "sha256:4083ae0a60d9784e1af4911fa4d87be3518c957636a4001de232fd82c9ac6353", size = 23797460, upload-time = "2026-06-15T02:27:31.909Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/46/07/bee3bab8634965354402d28aaabae7932097dfa5d9895afbeebeac24de69/praw-8.0.2.tar.gz", hash = "sha256:29bfe995f7f24017dd8eee36153085ad27de1740f13c7dcdb08df42a24a0dae2", size = 23798066, upload-time = "2026-06-24T00:06:31.429Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/73/46/7986fda441c7133b32deb89bcafbceb8d72532e053639c45c761c7cab251/praw-8.0.1-py3-none-any.whl", hash = "sha256:18295994d07b17a565d4663a8778319243c56d7b49fae2504b448607551dfdff", size = 199225, upload-time = "2026-06-15T02:27:30.104Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/7e/0831abb5ef9db1db8981f2c230c5a71ecc81732a7924ec79b076f5eea693/praw-8.0.2-py3-none-any.whl", hash = "sha256:22a988bef07e2d840ab062ae25f760c5bfc6367b9ecaab69f71e7ff511d75564", size = 199203, upload-time = "2026-06-24T00:06:29.73Z" },
 ]
 
 [[package]]
