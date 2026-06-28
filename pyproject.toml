@@ -18,7 +18,7 @@ dependencies = [
 dev = [
     "coverage[toml]==7.14.3",
     "isort==8.0.1",
-    "ruff>=0.15.18",
+    "ruff>=0.15.20",
     "ty>=0.0.54",
 ]
 
