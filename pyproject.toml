@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 
 dependencies = [
-    "alembic==1.18.4",
+    "alembic==1.18.5",
     "bump-my-version>=1.4.1",
     "praw==8.0.2",
     "psycopg2==2.9.12",
