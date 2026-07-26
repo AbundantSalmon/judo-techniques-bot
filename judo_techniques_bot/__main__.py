@@ -45,7 +45,7 @@ if __name__ == "__main__":
     try:
         main.main()
     except Exception as e:
-        logger.exception(e)
+        logger.exception(e)  # noqa: TRY401
         sentry_sdk.capture_exception(e)
         logger.warning("Uncaught exception occurred while running, trying again.")
     finally:
