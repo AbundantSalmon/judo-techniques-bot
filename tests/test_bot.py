@@ -1,7 +1,8 @@
-from praw.exceptions import RedditAPIException
 import pickle
 import unittest
 from unittest import mock
+
+from praw.exceptions import RedditAPIException
 
 with (
     mock.patch.dict(

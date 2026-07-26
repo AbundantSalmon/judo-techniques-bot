@@ -1,10 +1,11 @@
-import dataclasses
+import dataclasses  # noqa: EXE002
 import logging
 import re
 from time import sleep
 
 import praw
 from praw.exceptions import RedditAPIException
+
 from .config import (
     CLIENT_ID,
     CLIENT_SECRET,
@@ -15,7 +16,7 @@ from .config import (
     VERSION,
 )
 from .db import session_scope
-from .models import DetectedJudoTechniqueMentionEvent, CachedTechniques
+from .models import CachedTechniques, DetectedJudoTechniqueMentionEvent
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ class Bot:
     ) -> None:
         self.data: dict[str, CachedTechniques] = data
         self._technique_patterns: dict[str, re.Pattern] = {
-            name: self._build_technique_pattern(name.lower()) for name in data.keys()
+            name: self._build_technique_pattern(name.lower()) for name in data
         }
         self.time_between_retry = time_between_retry
 
@@ -123,7 +124,7 @@ class Bot:
             # Do not process if the bot has read it's own comment
             return mentioned_techniques
         comment_body_lower_case = comment.body.lower()
-        for japanese_name in self.data.keys():
+        for japanese_name in self.data:
             technique_id = self.data[japanese_name]["id"]
             pattern = self._technique_patterns[japanese_name]
             for match in pattern.finditer(comment_body_lower_case):
@@ -232,7 +233,7 @@ class Bot:
         try:
             comment.reply(text)
         except RedditAPIException as e:
-            logger.exception(e)
+            logger.exception(e)  # noqa: TRY401
             EXCEPTION_ERRORS = [
                 "DELETED_COMMENT",
                 "COMMENT_UNREPLIABLE",
@@ -248,7 +249,7 @@ class Bot:
             for _ in range(self.MAX_RETRIES):
                 try:
                     logger.exception(
-                        e
+                        e  # noqa: TRY401
                     )  # Capture exception to understand what is happening
                     logger.warning("Sleeping 10 min, then retry")
                     sleep(self.time_between_retry)

@@ -2,11 +2,10 @@ import logging
 import os
 from pathlib import Path
 
-from judo_techniques_bot import config
-from judo_techniques_bot import main
 import sentry_sdk
 from sqlalchemy.orm.session import close_all_sessions
 
+from judo_techniques_bot import config, main
 from judo_techniques_bot.custom_logging import CustomFormatter
 
 # Sentry
@@ -46,7 +45,7 @@ if __name__ == "__main__":
     try:
         main.main()
     except Exception as e:
-        logger.exception(e)
+        logger.exception(e)  # noqa: TRY401
         sentry_sdk.capture_exception(e)
         logger.warning("Uncaught exception occurred while running, trying again.")
     finally:
