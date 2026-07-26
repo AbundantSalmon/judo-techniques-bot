@@ -5,6 +5,7 @@ from time import sleep
 
 import praw
 from praw.exceptions import RedditAPIException
+
 from .config import (
     CLIENT_ID,
     CLIENT_SECRET,
@@ -15,7 +16,7 @@ from .config import (
     VERSION,
 )
 from .db import session_scope
-from .models import DetectedJudoTechniqueMentionEvent, CachedTechniques
+from .models import CachedTechniques, DetectedJudoTechniqueMentionEvent
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ class Bot:
     ) -> None:
         self.data: dict[str, CachedTechniques] = data
         self._technique_patterns: dict[str, re.Pattern] = {
-            name: self._build_technique_pattern(name.lower()) for name in data.keys()
+            name: self._build_technique_pattern(name.lower()) for name in data
         }
         self.time_between_retry = time_between_retry
 

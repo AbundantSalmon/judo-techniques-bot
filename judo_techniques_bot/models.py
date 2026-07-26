@@ -1,11 +1,13 @@
 from typing import TypedDict
-from .db import Base, session_scope
+
 from sqlalchemy import Column, Identity
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.types import Boolean, DateTime, Integer, String
+
+from .db import Base, session_scope
 
 
 class CachedTechniques(TypedDict):
@@ -37,9 +39,7 @@ class Technique(Base):
 
     # human readable representation
     def __repr__(self):
-        return "<Technique(id='{}', japanese_display_name='{}', video_url={})>".format(
-            self.id, self.japanese_display_name, self.video_url
-        )
+        return f"<Technique(id='{self.id}', japanese_display_name='{self.japanese_display_name}', video_url={self.video_url})>"
 
     @staticmethod
     def get_cached_techniques() -> dict[str, CachedTechniques]:
@@ -72,6 +72,4 @@ class DetectedJudoTechniqueMentionEvent(Base):
 
     # human readable representation
     def __repr__(self):
-        return "<DetectedJudoTechniqueMentionEvent(created_at='{}', technique_id='{}', author={}, translated={})>".format(
-            self.created_at, self.technique_id, self.author, self.translated
-        )
+        return f"<DetectedJudoTechniqueMentionEvent(created_at='{self.created_at}', technique_id='{self.technique_id}', author={self.author}, translated={self.translated})>"

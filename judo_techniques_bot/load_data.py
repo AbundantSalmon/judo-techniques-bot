@@ -1,5 +1,5 @@
-import logging
 import csv
+import logging
 import os
 
 from .db import session_scope

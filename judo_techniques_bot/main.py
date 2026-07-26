@@ -1,11 +1,12 @@
 import logging
 from pathlib import Path
+
 from alembic import command
 from alembic.config import Config
+from sqlalchemy.orm.session import close_all_sessions
 
 from .bot import Bot
 from .models import Technique
-from sqlalchemy.orm.session import close_all_sessions
 
 logger = logging.getLogger(__name__)
 

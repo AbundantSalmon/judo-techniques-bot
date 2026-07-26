@@ -1,11 +1,14 @@
 from logging.config import fileConfig
 
 from alembic import context
-from judo_techniques_bot.config import DATABASE_URI
-from judo_techniques_bot.models import DetectedJudoTechniqueMentionEvent, Technique  # noqa: F401
 from sqlalchemy import engine_from_config, pool
 
+from judo_techniques_bot.config import DATABASE_URI
 from judo_techniques_bot.db import Base
+from judo_techniques_bot.models import (  # noqa: F401
+    DetectedJudoTechniqueMentionEvent,
+    Technique,
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
