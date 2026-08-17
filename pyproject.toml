@@ -19,7 +19,7 @@ dev = [
     "coverage[toml]==7.15.4",
     "isort==8.0.1",
     "ruff>=0.16.2",
-    "ty>=0.0.70",
+    "ty>=0.0.72",
 ]
 
 [tool.isort]
