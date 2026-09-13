@@ -22,7 +22,7 @@ jobs:
 
       - name: Bump version
         id: bump
-        uses: callowayproject/bump-my-version@master
+        uses: callowayproject/bump-my-version@1.5.1
         env:
           BUMPVERSION_TAG: "true"
         with:
@@ -33,12 +33,12 @@ jobs:
         if: steps.bump.outputs.bumped == 'true'
         run: |
           echo "Version was bumped from ${{ steps.bump.outputs.previous-version }} to ${{ steps.bump.outputs.current-version }}!"
-      
+
       - name: Commit files
         if: steps.bump.outputs.bumped == 'true'
         run: |
           git commit -a -m "bump version to ${{ steps.bump.outputs.current-version }}"
-      
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         if: steps.bump.outputs.bumped == 'true'
