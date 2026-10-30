@@ -10,7 +10,7 @@ dependencies = [
     "bump-my-version>=1.5.1",
     "praw==8.0.3",
     "psycopg2==2.9.13",
-    "sentry-sdk==2.71.0",
+    "sentry-sdk==2.72.0",
     "sqlalchemy==2.0.53",
 ]
 
